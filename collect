@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
+NEOVIM_CONFIG_PATH=~/.config/nvim
+
+echo "Collecting local configurations..."
+
+[[ -d $SCRIPT_PATH/nvim/autoload ]] && rm -rf $SCRIPT_PATH/nvim/autoload
+[[ -d $SCRIPT_PATH/nvim/plugged ]] && rm -rf $SCRIPT_PATH/nvim/plugged
+cp -r $NEOVIM_CONFIG_PATH ./
+
+echo "Done"
+tput bel

@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+set -e
+
+SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
+NEOVIM_CONFIG_PATH=~/.config/nvim
+
+echo "◉ Bootstrapping work environment..."
+
+echo -e "---\n○ Installing Oh My Zsh..."
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+echo -e "---\n○ Installing Homebrew..."
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+
+echo -e "---\n○ Installing fzf..."
+brew install fzf
+
+echo -e "---\n○ Installing ctags..."
+brew install ctags
+
+echo -e "---\n○ Installing ripgrep..."
+brew install ripgrep
+
+echo -e "---\n○ Installing Neovim..."
+brew install neovim
+[[ ! -d $NEOVIM_CONFIG_PATH ]] && mkdir -p $NEOVIM_CONFIG_PATH
+
+echo -e "---\n○ Installing fonts for custom characters..."
+brew tap homebrew/cask-fonts
+brew cask install font-hack-nerd-font
+
+echo -e "---\n○ Installing Neovim plugin manager and plugins..."
+cp -r nvim $NEOVIM_CONFIG_PATH/../
+[[ -d $NEOVIM_CONFIG_PATH/plugged ]] && rm -rf $NEOVIM_CONFIG_PATH/plugged
+nvim -c 'PlugInstall|qa'
+nvim -c 'CocUpdateSync|qa'
+echo "...done."
+
+echo -e "---\n○ Installing nvm..."
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+
+echo -e "---\n○ Installing pyenv..."
+brew install pyenv
+
+echo -e "---\n○ Creating initial ~/.zshrc"
+if [[ -f ~/.zshrc ]]; then
+  echo "~/.zshrc already exists!"
+else
+	cp $SCRIPT_PATH/.zshrc ~/.zshrc
+fi
+
+echo -e "---\n○ Sourcing ~/.zshrc..."
+. ~/.zshrc
+
+echo -e "---\n◉ Done\n"
+tput bel
