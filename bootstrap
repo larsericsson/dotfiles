@@ -4,54 +4,108 @@ set -e
 
 SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
 NEOVIM_CONFIG_PATH=~/.config/nvim
+HOMEBREW_BIN_DIR=/usr/local/bin
 
-echo "◉ Bootstrapping work environment..."
+echo "Bootstrapping work environment..."
 
-echo -e "---\n○ Installing Oh My Zsh..."
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+echo -e "\n🔸 Installing Homebrew..."
+if [[ ! "$(command -v brew)" ]]; then
+	bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+else
+	echo "  \`brew\` already appears to be installed, skipping install"
+fi
 
-echo -e "---\n○ Installing Homebrew..."
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+echo -e "\n🔸 Installing zsh..."
+if [[ ! "$(command -v zsh)" ]]; then
+	$HOMEBREW_BIN_DIR/brew install zsh
+else
+	echo "  \`zsh\` already appears to be installed, skipping install"
+fi
 
-echo -e "---\n○ Installing fzf..."
-brew install fzf
+echo -e "\n🔸 Installing Oh My Zsh..."
+export KEEP_ZSHRC="yes"
+export RUNZSH="no"
+if [[ ! -d ~/.oh-my-zsh ]]; then
+	bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+elif [[ "$SHELL" != "$(which zsh)" ]]; then
+	echo "  ~/.oh-my-zsh already exits but \$SHELL ($SHELL) is not set to \
+$(which zsh) for current user. Changing it!"
+	sudo chsh -s $(which zsh) $(whoami)
+else
+	echo "  Oh My Zsh appears to be already installed"
+fi
 
-echo -e "---\n○ Installing ctags..."
-brew install ctags
-
-echo -e "---\n○ Installing ripgrep..."
-brew install ripgrep
-
-echo -e "---\n○ Installing Neovim..."
-brew install neovim
-[[ ! -d $NEOVIM_CONFIG_PATH ]] && mkdir -p $NEOVIM_CONFIG_PATH
-
-echo -e "---\n○ Installing fonts for custom characters..."
-brew tap homebrew/cask-fonts
-brew cask install font-hack-nerd-font
-
-echo -e "---\n○ Installing Neovim plugin manager and plugins..."
-cp -r nvim $NEOVIM_CONFIG_PATH/../
-[[ -d $NEOVIM_CONFIG_PATH/plugged ]] && rm -rf $NEOVIM_CONFIG_PATH/plugged
-nvim -c 'PlugInstall|qa'
-nvim -c 'CocUpdateSync|qa'
-echo "...done."
-
-echo -e "---\n○ Installing nvm..."
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-
-echo -e "---\n○ Installing pyenv..."
-brew install pyenv
-
-echo -e "---\n○ Creating initial ~/.zshrc"
+echo -e "\n🔸 Creating ~/.zshrc"
 if [[ -f ~/.zshrc ]]; then
-  echo "~/.zshrc already exists!"
+	echo "  ~/.zshrc already exists! Copy what you need from $SCRIPT_PATH.zshrc \
+(see the \"User configuration\" part specifically)."
 else
 	cp $SCRIPT_PATH/.zshrc ~/.zshrc
 fi
 
-echo -e "---\n○ Sourcing ~/.zshrc..."
-. ~/.zshrc
+echo -e "\n🔸 Installing fzf..."
+if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions fzf)" ]]; then
+	$HOMEBREW_BIN_DIR/brew install fzf
+else
+	echo "  \`fzf\` appears to be installed, skipping install"
+fi
 
-echo -e "---\n◉ Done\n"
+echo -e "\n🔸 Installing ctags..."
+if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions ctags)" ]]; then
+	$HOMEBREW_BIN_DIR/brew install ctags
+else
+	echo "  \`ctags\` appears to be already installed, skipping install"
+fi
+
+echo -e "\n🔸 Installing ripgrep..."
+if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions ripgrep)" ]]; then
+	$HOMEBREW_BIN_DIR/brew install ripgrep
+else
+	echo "  \`ripgrep\` appears to be already installed, skipping install"
+fi
+
+echo -e "\n🔸 Installing Neovim..."
+[[ ! -d $NEOVIM_CONFIG_PATH ]] && mkdir -p $NEOVIM_CONFIG_PATH
+if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions neovim)" ]]; then
+	$HOMEBREW_BIN_DIR/brew install neovim
+else
+	echo "  \`neovim\` appears to be already installed, skipping install"
+fi
+
+echo -e "\n🔸 Installing fonts for custom characters..."
+if [[ ! "$($HOMEBREW_BIN_DIR/brew cask ls --versions font-hack-nerd-font)" ]]; then
+	$HOMEBREW_BIN_DIR/brew tap homebrew/cask-fonts
+	$HOMEBREW_BIN_DIR/brew cask install font-hack-nerd-font
+else
+	echo "  \`font-hack-nerd-font\` appears to be already installed, skipping install"
+fi
+
+echo -e "\n🔸 Installing Neovim plugin manager and plugins..."
+cp -r $SCRIPT_PATH/nvim $NEOVIM_CONFIG_PATH/../
+[[ -d $NEOVIM_CONFIG_PATH/plugged ]] && rm -rf $NEOVIM_CONFIG_PATH/plugged
+$($HOMEBREW_BIN_DIR/brew --prefix neovim)/bin/nvim -c 'PlugInstall|qa'
+$($HOMEBREW_BIN_DIR/brew --prefix neovim)/bin/nvim -c 'CocUpdateSync|qa'
+
+echo -e "\n🔸 Installing nvm..."
+if [[ ! "$(command -v nvm)" ]]; then
+	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+else
+	echo "  \`nvm\` appears to be already installed, skipping install"
+fi
+
+echo -e "\n🔸 Installing pyenv..."
+if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions pyenv)" ]]; then
+	$HOMEBREW_BIN_DIR/brew install pyenv
+else
+	echo "  \`pyenv\` appears to be already installed, skipping install"
+fi
+
+echo -e "\n🔸 Installing hub..."
+if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions hub)" ]]; then
+	$HOMEBREW_BIN_DIR/brew install hub
+else
+	echo "  \`hub\` appears to be already installed, skipping install"
+fi
+
+echo -e "\n🎉 All done! Launch a new shell to get going.\n"
 tput bel
