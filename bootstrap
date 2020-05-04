@@ -1,111 +1,225 @@
 #!/usr/bin/env bash
 
+##
+# ./collect
+# - Installs and configures up a local development environment.
+##
+
 set -e
+
+# ensure we include Homebrew and its installed binaries, if installed
+PATH=$PATH:/usr/local/bin
 
 SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
 NEOVIM_CONFIG_PATH=~/.config/nvim
-HOMEBREW_BIN_DIR=/usr/local/bin
 
-echo "Bootstrapping work environment..."
+STYLE_RESET=$(printf '\e[0m')
+STYLE_BOLD=$(printf '\e[1m')
+STYLE_HEADER=$(printf '\e[1;97m')
+STYLE_SUBHEADER=$(printf '\e[1;36m')
+STYLE_PARAGRAPH=$(printf '\e[2m')
 
-echo -e "\n🔸 Installing Homebrew..."
-if [[ ! "$(command -v brew)" ]]; then
-	bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
-else
-	echo "  \`brew\` already appears to be installed, skipping install"
-fi
+POST_SHELL_SETUP_MESSAGE="Now go ahead and add what you need from $SCRIPT_PATH/.zshrc to ~/.zshrc (see the \"User configuration\" part specifically)."
 
-echo -e "\n🔸 Installing zsh..."
-if [[ ! "$(command -v zsh)" ]]; then
-	$HOMEBREW_BIN_DIR/brew install zsh
-else
-	echo "  \`zsh\` already appears to be installed, skipping install"
-fi
+function printHeader {
+  echo -e "${STYLE_RESET}\n${STYLE_HEADER}$1${STYLE_RESET}"
+}
 
-echo -e "\n🔸 Installing Oh My Zsh..."
-export KEEP_ZSHRC="yes"
-export RUNZSH="no"
-if [[ ! -d ~/.oh-my-zsh ]]; then
-	bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-elif [[ "$SHELL" != "$(which zsh)" ]]; then
-	echo "  ~/.oh-my-zsh already exits but \$SHELL ($SHELL) is not set to \
-$(which zsh) for current user. Changing it!"
-	sudo chsh -s $(which zsh) $(whoami)
-else
-	echo "  Oh My Zsh appears to be already installed"
-fi
+function printSubheader {
+  echo -e "${STYLE_RESET}\n${STYLE_HEADER}▸${STYLE_RESET} ${STYLE_SUBHEADER}$1${STYLE_RESET}"
+}
 
-echo -e "\n🔸 Creating ~/.zshrc"
-if [[ -f ~/.zshrc ]]; then
-	echo "  ~/.zshrc already exists! Copy what you need from $SCRIPT_PATH.zshrc \
-(see the \"User configuration\" part specifically)."
-else
-	cp $SCRIPT_PATH/.zshrc ~/.zshrc
-fi
+function printParagraph {
+  echo -e "${STYLE_RESET}  ${STYLE_PARAGRAPH}$1${STYLE_RESET}"
+}
 
-echo -e "\n🔸 Installing fzf..."
-if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions fzf)" ]]; then
-	$HOMEBREW_BIN_DIR/brew install fzf
-else
-	echo "  \`fzf\` appears to be installed, skipping install"
-fi
+function showError {
+	echo "$1" 1>&2
+	exit 1
+}
 
-echo -e "\n🔸 Installing ctags..."
-if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions ctags)" ]]; then
-	$HOMEBREW_BIN_DIR/brew install ctags
-else
-	echo "  \`ctags\` appears to be already installed, skipping install"
-fi
+function showInfo {
+	echo -e "${STYLE_RESET}${STYLE_BOLD}./$(basename $0)${STYLE_RESET}"
+	echo "Installs and configures up a local development environment."
+}
 
-echo -e "\n🔸 Installing ripgrep..."
-if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions ripgrep)" ]]; then
-	$HOMEBREW_BIN_DIR/brew install ripgrep
-else
-	echo "  \`ripgrep\` appears to be already installed, skipping install"
-fi
+function bootstrap {
+  printHeader "☕️ Bootstrapping work environment..."
 
-echo -e "\n🔸 Installing Neovim..."
-[[ ! -d $NEOVIM_CONFIG_PATH ]] && mkdir -p $NEOVIM_CONFIG_PATH
-if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions neovim)" ]]; then
-	$HOMEBREW_BIN_DIR/brew install neovim
-else
-	echo "  \`neovim\` appears to be already installed, skipping install"
-fi
+  printSubheader "Homebrew"
+  if [[ ! "$(command -v brew)" ]]; then
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+  else
+    printParagraph "\`brew\` already appears to be installed, at $(which brew)"
+  fi
 
-echo -e "\n🔸 Installing fonts for custom characters..."
-if [[ ! "$($HOMEBREW_BIN_DIR/brew cask ls --versions font-hack-nerd-font)" ]]; then
-	$HOMEBREW_BIN_DIR/brew tap homebrew/cask-fonts
-	$HOMEBREW_BIN_DIR/brew cask install font-hack-nerd-font
-else
-	echo "  \`font-hack-nerd-font\` appears to be already installed, skipping install"
-fi
+  printSubheader "zsh"
+  if [[ ! "$(command -v zsh)" ]]; then
+    brew install zsh
+  else
+    printParagraph "\`zsh\` already appears to be installed, at $(which zsh)"
+  fi
 
-echo -e "\n🔸 Installing Neovim plugin manager and plugins..."
-cp -r $SCRIPT_PATH/nvim $NEOVIM_CONFIG_PATH/../
-[[ -d $NEOVIM_CONFIG_PATH/plugged ]] && rm -rf $NEOVIM_CONFIG_PATH/plugged
-$($HOMEBREW_BIN_DIR/brew --prefix neovim)/bin/nvim -c 'PlugInstall|qa'
-$($HOMEBREW_BIN_DIR/brew --prefix neovim)/bin/nvim -c 'CocUpdateSync|qa'
+  printSubheader "Oh My Zsh"
+  export RUNZSH="no"  # don't switch to zsh directly after installation
+  if [[ ! -d ~/.oh-my-zsh ]]; then
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  elif [[ "$SHELL" != "$(which zsh)" ]]; then
+    printParagraph "Oh My Zsh appears to be already installed but \$SHELL ($SHELL) is not set to $(which zsh) for current user. Changing it!"
+    chsh -s $(which zsh) $(whoami)
+  else
+    printParagraph "Oh My Zsh appears to be already installed"
+  fi
+  echo
+  echo "export PATH=$PATH" >> ~/.zshrc  # will likely get modified by user from ~/.zshrc later
+  printParagraph "Oh My Zsh installation completed!"
+  printParagraph "$POST_SHELL_SETUP_MESSAGE"
+  unset RUNZSH
 
-echo -e "\n🔸 Installing nvm..."
-if [[ ! "$(command -v nvm)" ]]; then
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-else
-	echo "  \`nvm\` appears to be already installed, skipping install"
-fi
+  printSubheader "fzf"
+  if [[ ! "$(command -v fzf)" ]]; then
+    brew install fzf
+  else
+    printParagraph "\`fzf\` appears to be installed, at $(which fzf)"
+  fi
 
-echo -e "\n🔸 Installing pyenv..."
-if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions pyenv)" ]]; then
-	$HOMEBREW_BIN_DIR/brew install pyenv
-else
-	echo "  \`pyenv\` appears to be already installed, skipping install"
-fi
+  printSubheader "ctags"
+  if [[ ! "$(command -v ctags)" ]]; then
+    brew install ctags
+  else
+    printParagraph "\`ctags\` appears to be already installed, at $(which ctags)"
+  fi
 
-echo -e "\n🔸 Installing hub..."
-if [[ ! "$($HOMEBREW_BIN_DIR/brew ls --versions hub)" ]]; then
-	$HOMEBREW_BIN_DIR/brew install hub
-else
-	echo "  \`hub\` appears to be already installed, skipping install"
-fi
+  printSubheader "ripgrep"
+  if [[ ! "$(command -v rg)" ]]; then
+    brew install ripgrep
+  else
+    printParagraph "\`rg\` appears to be already installed, at $(which rg)"
+  fi
 
-echo -e "\n🎉 All done! Launch a new shell to get going.\n"
-tput bel
+  printSubheader "Neovim"
+  [[ ! -d $NEOVIM_CONFIG_PATH ]] && mkdir -p $NEOVIM_CONFIG_PATH
+  if [[ ! "$(command -v nvim)" ]]; then
+    brew install neovim
+  else
+    printParagraph "\`nvim\` appears to be already installed, at $(which nvim)"
+  fi
+
+  printSubheader "fonts for custom characters"
+  if [[ ! "$(brew cask ls --versions font-hack-nerd-font)" ]]; then
+    brew tap homebrew/cask-fonts
+    brew cask install font-hack-nerd-font
+  else
+    printParagraph "\`font-hack-nerd-font\` appears to be already installed"
+  fi
+
+  printSubheader "Neovim plugin manager and plugins"
+  [[ -d $NEOVIM_CONFIG_PATH/plugged ]] && rm -rf $NEOVIM_CONFIG_PATH/plugged
+  cp -r $SCRIPT_PATH/nvim $NEOVIM_CONFIG_PATH/../
+  [[ -d $NEOVIM_CONFIG_PATH/plugged ]] && rm -rf $NEOVIM_CONFIG_PATH/plugged
+  printParagraph "Installing in Neovim..."
+  sleep 3
+  $(brew --prefix neovim)/bin/nvim -c 'PlugInstall|qa'
+  $(brew --prefix neovim)/bin/nvim -c 'CocUpdateSync|qa'
+
+	echo
+  printSubheader "Node Version Manager"
+  if [[ ! -d "$HOME/.nvm" ]]; then
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+  else
+    printParagraph "\`nvm\` appears to be already installed"
+  fi
+	export NVM_DIR="$HOME/.nvm"  # should also be in ~/.zshrc
+	[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # should also be in ~/.zshrc
+
+  printSubheader "Node.js"
+	if [[ "$(command -v node)" != "" ]]; then
+		printParagraph "\`node\` appears to be already installed, at $(which node)"
+	elif [[ "$(command -v nodejs)" != "" ]]; then
+		printParagraph "\`nodejs\` appears to be already installed, at $(which nodejs)"
+	else
+		printParagraph "Installing latest LTS version of Node.js"
+		nvm install --lts --latest-npm
+	fi
+
+  printSubheader "pyenv"
+  if [[ ! "$(command -v pyenv)" ]]; then
+    brew install pyenv
+  else
+    printParagraph "\`pyenv\` appears to be already installed, at $(which pyenv)"
+  fi
+
+	printSubheader "Python 3"
+  if [[ ! "$(command -v python3)" ]]; then
+		latestPython3Version="$(pyenv install --list | awk '{print $1}' | grep '^[0-9]' | grep '\.[0-9]$' | grep '^3\.' | tail -1)"
+		printParagraph "Installing latest version of Python 3 ($latestPython3Version)"
+		pyenv install $latestPython3Version
+	else
+		printParagraph "\`python3\` appears to be already installed, at $(which python3)"
+	fi
+
+  printSubheader "pipenv"
+  if [[ ! "$(command -v pipenv)" ]]; then
+    brew install pipenv
+  else
+    printParagraph "\`pipenv\` appears to be already installed, at $(which pipenv)"
+  fi
+
+  printSubheader "GitHub CLI"
+  if [[ ! "$(brew ls --versions hub)" ]]; then
+    brew install hub
+  else
+    printParagraph "\`hub\` appears to be already installed, at $(which hub)"
+  fi
+
+	printSubheader "Global Git configuration"
+	if [[ ! -f ~/.gitignore ]]; then
+		printParagraph "Adding .gitignore"
+		cp $SCRIPT_PATH/.gitignore_global ~/.gitignore_global
+	else
+		printParagraph "~/.gitignore already exists"
+	fi
+	if [[ ! -f ~/.gitconfig ]]; then
+		printParagraph "Adding .gitconfig"
+		cp $SCRIPT_PATH/.gitconfig_global ~/.gitconfig
+	else
+		printParagraph "~/.gitconfig already exists"
+	fi
+	if [[ "$(git config --global user.name)" == "" ]]; then
+		printf "\n  Full name to use for Git: "
+		read globalGitUserName
+		git config --global user.name "$globalGitUserName"
+	fi
+	if [[ "$(git config --global user.email)" == "" ]]; then
+		printf "\n  Email address to use for Git: "
+		read globalGitUserEmailAddress
+		git config --global user.email "$globalGitUserEmailAddress"
+	fi
+
+  tput bel
+  printHeader "🎉  All done!"
+  echo "    $POST_SHELL_SETUP_MESSAGE"
+  echo
+  read -p "Press Enter to activate new environment"
+  echo
+
+	exec zsh -l
+}
+
+function main {
+	# parse arguments
+	while [ $# -gt 0 ]; do
+		case $1 in
+			--help) showInfo; exit;;
+			-h) showInfo; exit;;
+			*) showError "Invalid option $1";;
+		esac
+		shift
+	done
+
+	echo "About to bootstrap development environment."
+	read -p "Press Enter to continue"
+	bootstrap
+}
+
+main "$@"

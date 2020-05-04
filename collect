@@ -1,15 +1,92 @@
 #!/usr/bin/env bash
 
+##
+# ./collect
+# - Collects local configuration files and prepares them for version control.
+##
+
 set -e
 
 SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
 NEOVIM_CONFIG_PATH=~/.config/nvim
 
-echo "Collecting local configurations..."
+STYLE_RESET=$(printf '\e[0m')
+STYLE_BOLD=$(printf '\e[1m')
+STYLE_HEADER=$(printf '\e[1;97m')
+STYLE_SUBHEADER=$(printf '\e[1;36m')
+STYLE_PARAGRAPH=$(printf '\e[2m')
 
-[[ -d $SCRIPT_PATH/nvim/autoload ]] && rm -rf $SCRIPT_PATH/nvim/autoload
-[[ -d $SCRIPT_PATH/nvim/plugged ]] && rm -rf $SCRIPT_PATH/nvim/plugged
-cp -r $NEOVIM_CONFIG_PATH ./
+function printHeader {
+  echo -e "${STYLE_RESET}\n${STYLE_HEADER}$1${STYLE_RESET}"
+}
 
-echo "Done"
-tput bel
+function printSubheader {
+  echo -e "${STYLE_RESET}\n${STYLE_HEADER}▸${STYLE_RESET} ${STYLE_SUBHEADER}$1${STYLE_RESET}"
+}
+
+function printParagraph {
+  echo -e "${STYLE_RESET}  ${STYLE_PARAGRAPH}$1${STYLE_RESET}"
+}
+
+function showError {
+	echo "$1" 1>&2
+	exit 1
+}
+
+function showInfo {
+	echo -e "${STYLE_RESET}${STYLE_BOLD}./$(basename $0)${STYLE_RESET}"
+	echo "Collects local configuration files and prepares them for version control."
+}
+
+function main {
+	# parse arguments
+	while [ $# -gt 0 ]; do
+		case $1 in
+			--help) showInfo; exit;;
+			-h) showInfo; exit;;
+			*) showError "Invalid option $1";;
+		esac
+		shift
+	done
+
+	echo "About to gather local configuration files and copy them into $SCRIPT_PATH."
+	read -p "Press Enter to continue"
+	collect
+}
+
+function collect {
+  printHeader "☕️ Collecting local configurations..."
+
+	printSubheader "Neovim and its plugins"
+	[[ -d $SCRIPT_PATH/nvim/autoload ]] && rm -rf $SCRIPT_PATH/nvim/autoload
+	[[ -d $SCRIPT_PATH/nvim/plugged ]] && rm -rf $SCRIPT_PATH/nvim/plugged
+	[[ -d $NEOVIM_CONFIG_PATH ]] && cp -r $NEOVIM_CONFIG_PATH ./
+
+	################################################
+
+	printSubheader "Git"
+	if [[ -f ~/.gitconfig ]]; then
+		printParagraph "~/.gitconfig"
+	  cp ~/.gitconfig $SCRIPT_PATH/.gitconfig_global
+	else
+		printParagraph "~/.gitconfig doesn't exist"
+	fi
+
+	# strip Git config from user specifics
+	cat $SCRIPT_PATH/.gitconfig_global \
+		| grep -v "email = $(git config --global user.email)" \
+		| grep -v "name = $(git config --global user.name)" \
+		> $SCRIPT_PATH/.gitconfig_global
+
+	if [[ -f ~/.gitignore ]]; then
+		printParagraph "~/.gitignore"
+		cp ~/.gitignore $SCRIPT_PATH/.gitignore_global
+	else
+		printParagraph "~/.gitignore doesn't exist"
+	fi
+
+	tput bel
+	printHeader "🎉  All done!"
+}
+
+main "$@"
