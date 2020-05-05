@@ -93,10 +93,10 @@ setopt interactivecomments
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-	export VISUAL="nvim"
-	export EDITOR="nvim"
+  export VISUAL="nvim"
+  export EDITOR="nvim"
 else
-	export VISUAL="nvim"
+  export VISUAL="nvim"
   export EDITOR="nvim"
 fi
 
@@ -114,7 +114,7 @@ export NVM_DIR="$HOME/.nvm"
 
 # initialize pyenv, if installed
 if [[ "$(command -v pyenv)" ]]; then
-	eval "$(pyenv init -)"
+  eval "$(pyenv init -)"
 fi
 
 # global grep options
@@ -125,10 +125,10 @@ export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
 
 # show current Kubernetes context on right-hand side of shell, if kubectl is installed
 if [[ -x "$(command -v kubectl)" ]]; then
-	# get current Kubernetes context
-	function print_kube_context() {
-		echo ${$(kubectl config current-context 2> /dev/null):-"(unknown)"}
-	}
+  # get current Kubernetes context
+  function print_kube_context() {
+    echo ${$(kubectl config current-context 2> /dev/null):-"(unknown)"}
+  }
 
-	RPROMPT='%{%B%F{blue}%}☸️  $(print_kube_context)%{%f%k%b%K{black}%B%F{green}%}'
+  RPROMPT='%{%B%F{blue}%}☸️  $(print_kube_context)%{%f%k%b%K{black}%B%F{green}%}'
 fi

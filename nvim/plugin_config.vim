@@ -7,17 +7,17 @@ let g:gutentags_ctags_executable="/usr/local/bin/ctags"
 
 " ```coc.nvim extensions
 let g:coc_global_extensions = [
-	\ 'coc-tsserver',
-	\ 'coc-eslint',
-	\ 'coc-json',
-	\ 'coc-prettier',
-	\ 'coc-css',
-	\ 'coc-html',
-	\ 'coc-python',
-	\ 'coc-prettier',
-	\ 'coc-svg',
-	\ 'coc-snippets'
-	\ ]
+  \ 'coc-tsserver',
+  \ 'coc-eslint',
+  \ 'coc-json',
+  \ 'coc-prettier',
+  \ 'coc-css',
+  \ 'coc-html',
+  \ 'coc-python',
+  \ 'coc-prettier',
+  \ 'coc-svg',
+  \ 'coc-snippets'
+  \ ]
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
