@@ -12,6 +12,7 @@ set timeoutlen=400
 set ignorecase
 set title
 set titlestring=%F
+set nowrap
 
 " prefer spaces over tabs, four spaces per indentation
 set tabstop=2

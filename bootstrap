@@ -46,18 +46,26 @@ function showInfo {
 function bootstrap {
   printHeader "☕️ Bootstrapping work environment..."
 
+  printSubheader "MacOS Command Line Tools"
+  logFile="/tmp/cmdline-tools-install.$(date +%s)"
+  xcode-select --install &> $logFile || true
+  if [[ "$(cat $logFile)" == *"already installed"* ]]; then
+    printParagraph "Command Line Tools appears to be already installed"
+  fi
+  rm $logFile
+
   printSubheader "Homebrew"
   if [[ ! "$(command -v brew)" ]]; then
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
   else
-    printParagraph "\`brew\` already appears to be installed, at $(which brew)"
+    printParagraph "\`brew\` appears to be already installed, at $(which brew)"
   fi
 
   printSubheader "zsh"
   if [[ ! "$(command -v zsh)" ]]; then
     brew install zsh
   else
-    printParagraph "\`zsh\` already appears to be installed, at $(which zsh)"
+    printParagraph "\`zsh\` appears to be already installed, at $(which zsh)"
   fi
 
   printSubheader "Oh My Zsh"
@@ -88,7 +96,7 @@ function bootstrap {
     # we want the one from Homebrew since .zshrc references that
     brew install ctags
   else
-    printParagraph "\`ctags\` appears to be already installed, at $(which ctags)"
+    printParagraph "\`ctags\` appears to be already installed, at $(brew --prefix ctags)"
   fi
 
   printSubheader "ripgrep"
