@@ -34,13 +34,13 @@ function printParagraph {
 }
 
 function showError {
-	echo "$1" 1>&2
-	exit 1
+  echo "$1" 1>&2
+  exit 1
 }
 
 function showInfo {
-	echo -e "${STYLE_RESET}${STYLE_BOLD}./$(basename $0)${STYLE_RESET}"
-	echo "Installs and configures up a local development environment."
+  echo -e "${STYLE_RESET}${STYLE_BOLD}./$(basename $0)${STYLE_RESET}"
+  echo "Installs and configures up a local development environment."
 }
 
 function bootstrap {
@@ -84,7 +84,8 @@ function bootstrap {
   fi
 
   printSubheader "ctags"
-  if [[ ! "$(command -v ctags)" ]]; then
+  if [[ ! "$(brew ls --versions ctags)" ]]; then
+    # we want the one from Homebrew since .zshrc references that
     brew install ctags
   else
     printParagraph "\`ctags\` appears to be already installed, at $(which ctags)"
@@ -122,25 +123,25 @@ function bootstrap {
   $(brew --prefix neovim)/bin/nvim -c 'PlugInstall|qa'
   $(brew --prefix neovim)/bin/nvim -c 'CocUpdateSync|qa'
 
-	echo
+  echo
   printSubheader "Node Version Manager"
   if [[ ! -d "$HOME/.nvm" ]]; then
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
   else
     printParagraph "\`nvm\` appears to be already installed"
   fi
-	export NVM_DIR="$HOME/.nvm"  # should also be in ~/.zshrc
-	[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # should also be in ~/.zshrc
+  export NVM_DIR="$HOME/.nvm"  # should also be in ~/.zshrc
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # should also be in ~/.zshrc
 
   printSubheader "Node.js"
-	if [[ "$(command -v node)" != "" ]]; then
-		printParagraph "\`node\` appears to be already installed, at $(which node)"
-	elif [[ "$(command -v nodejs)" != "" ]]; then
-		printParagraph "\`nodejs\` appears to be already installed, at $(which nodejs)"
-	else
-		printParagraph "Installing latest LTS version of Node.js"
-		nvm install --lts --latest-npm
-	fi
+  if [[ "$(command -v node)" != "" ]]; then
+    printParagraph "\`node\` appears to be already installed, at $(which node)"
+  elif [[ "$(command -v nodejs)" != "" ]]; then
+    printParagraph "\`nodejs\` appears to be already installed, at $(which nodejs)"
+  else
+    printParagraph "Installing latest LTS version of Node.js"
+    nvm install --lts --latest-npm
+  fi
 
   printSubheader "pyenv"
   if [[ ! "$(command -v pyenv)" ]]; then
@@ -149,14 +150,14 @@ function bootstrap {
     printParagraph "\`pyenv\` appears to be already installed, at $(which pyenv)"
   fi
 
-	printSubheader "Python 3"
+  printSubheader "Python 3"
   if [[ ! "$(command -v python3)" ]]; then
-		latestPython3Version="$(pyenv install --list | awk '{print $1}' | grep '^[0-9]' | grep '\.[0-9]$' | grep '^3\.' | tail -1)"
-		printParagraph "Installing latest version of Python 3 ($latestPython3Version)"
-		pyenv install $latestPython3Version
-	else
-		printParagraph "\`python3\` appears to be already installed, at $(which python3)"
-	fi
+    latestPython3Version="$(pyenv install --list | awk '{print $1}' | grep '^[0-9]' | grep '\.[0-9]$' | grep '^3\.' | tail -1)"
+    printParagraph "Installing latest version of Python 3 ($latestPython3Version)"
+    pyenv install $latestPython3Version
+  else
+    printParagraph "\`python3\` appears to be already installed, at $(which python3)"
+  fi
 
   printSubheader "pipenv"
   if [[ ! "$(command -v pipenv)" ]]; then
@@ -172,29 +173,29 @@ function bootstrap {
     printParagraph "\`hub\` appears to be already installed, at $(which hub)"
   fi
 
-	printSubheader "Global Git configuration"
-	if [[ ! -f ~/.gitignore ]]; then
-		printParagraph "Adding .gitignore"
-		cp $SCRIPT_PATH/.gitignore_global ~/.gitignore_global
-	else
-		printParagraph "~/.gitignore already exists"
-	fi
-	if [[ ! -f ~/.gitconfig ]]; then
-		printParagraph "Adding .gitconfig"
-		cp $SCRIPT_PATH/.gitconfig_global ~/.gitconfig
-	else
-		printParagraph "~/.gitconfig already exists"
-	fi
-	if [[ "$(git config --global user.name)" == "" ]]; then
-		printf "\n  Full name to use for Git: "
-		read globalGitUserName
-		git config --global user.name "$globalGitUserName"
-	fi
-	if [[ "$(git config --global user.email)" == "" ]]; then
-		printf "\n  Email address to use for Git: "
-		read globalGitUserEmailAddress
-		git config --global user.email "$globalGitUserEmailAddress"
-	fi
+  printSubheader "Global Git configuration"
+  if [[ ! -f ~/.gitignore ]]; then
+    printParagraph "Adding .gitignore"
+    cp $SCRIPT_PATH/.gitignore_global ~/.gitignore_global
+  else
+    printParagraph "~/.gitignore already exists"
+  fi
+  if [[ ! -f ~/.gitconfig ]]; then
+    printParagraph "Adding .gitconfig"
+    cp $SCRIPT_PATH/.gitconfig_global ~/.gitconfig
+  else
+    printParagraph "~/.gitconfig already exists"
+  fi
+  if [[ "$(git config --global user.name)" == "" ]]; then
+    printf "\n  Full name to use for Git: "
+    read globalGitUserName
+    git config --global user.name "$globalGitUserName"
+  fi
+  if [[ "$(git config --global user.email)" == "" ]]; then
+    printf "\n  Email address to use for Git: "
+    read globalGitUserEmailAddress
+    git config --global user.email "$globalGitUserEmailAddress"
+  fi
 
   tput bel
   printHeader "🎉  All done!"
@@ -203,23 +204,23 @@ function bootstrap {
   read -p "Press Enter to activate new environment"
   echo
 
-	exec zsh -l
+  exec zsh -l
 }
 
 function main {
-	# parse arguments
-	while [ $# -gt 0 ]; do
-		case $1 in
-			--help) showInfo; exit;;
-			-h) showInfo; exit;;
-			*) showError "Invalid option $1";;
-		esac
-		shift
-	done
+  # parse arguments
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --help) showInfo; exit;;
+      -h) showInfo; exit;;
+      *) showError "Invalid option $1";;
+    esac
+    shift
+  done
 
-	echo "About to bootstrap development environment."
-	read -p "Press Enter to continue"
-	bootstrap
+  echo "About to bootstrap development environment."
+  read -p "Press Enter to continue"
+  bootstrap
 }
 
 main "$@"

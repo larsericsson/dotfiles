@@ -16,7 +16,7 @@ set titlestring=%F
 " prefer spaces over tabs, four spaces per indentation
 set tabstop=2
 set shiftwidth=2
-set noet
+set et
 
 " color theme config
 colorscheme solarized
