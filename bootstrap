@@ -119,7 +119,7 @@ function bootstrap {
     printParagraph "\`nvim\` appears to be already installed, at $(which nvim)"
   fi
 
-  printSubheader "fonts for custom characters"
+  printSubheader "Fonts for custom characters"
   if [[ ! "$(brew cask ls --versions font-hack-nerd-font)" ]]; then
     brew tap homebrew/cask-fonts
     brew cask install font-hack-nerd-font
@@ -177,6 +177,13 @@ function bootstrap {
     brew install pipenv
   else
     printParagraph "\`pipenv\` appears to be already installed, at $(which pipenv)"
+  fi
+
+  printSubheader "VimR"
+  if [[ ! "$(command -v vimr)" ]]; then
+    brew install vimr
+  else
+    printParagraph "\`vimr\` appears to be already installed, at $(which vimr)"
   fi
 
   printSubheader "GitHub CLI"
