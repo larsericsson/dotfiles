@@ -1,5 +1,3 @@
-set guifont=Hack\ Nerd\ Font:h14
-
 " general
 let mapleader = ","
 set encoding=utf-8
