@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 
 ##
-# ./collect
-# - Installs and configures up a local development environment.
+# ./bootstrap
+# - Installs and configures up a local development environment on MacOS.
 ##
 
 set -e
 
-# ensure we include Homebrew and its installed binaries, if installed
-PATH=$PATH:/usr/local/bin
+# ensure we include Homebrew and its installed binaries in $PATH, if installed
+HOMEBREW_PATH=/usr/local/bin
+CURRENT_PATH=$PATH
+if [[ :$CURRENT_PATH: != *:"$HOMEBREW_PATH":* ]]; then
+  PATH=$CURRENT_PATH:$HOMEBREW_PATH
+fi
 
 SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
 NEOVIM_CONFIG_PATH=~/.config/nvim
@@ -31,6 +35,17 @@ function printSubheader {
 
 function printParagraph {
   echo -e "${STYLE_RESET}  ${STYLE_PARAGRAPH}$1${STYLE_RESET}"
+}
+
+function ensureBareMinimumPATH {
+  if [[ :$PATH: != *:"$HOMEBREW_PATH":* ]]; then
+    # this will likely get modified by user from ~/.zshrc later
+    # but it's to ensure that some bare minimum paths are added
+    echo "
+# Added by bootstrap script to ensure some directories are added to \$PATH.
+# Most likely you will want to modify this when you add your own .zshrc config.
+export PATH=\$PATH:$HOMEBREW_PATH" >> ~/.zshrc
+  fi
 }
 
 function showError {
@@ -78,13 +93,17 @@ function bootstrap {
   else
     printParagraph "Oh My Zsh appears to be already installed"
   fi
-  echo
-  echo "export PATH=$PATH" >> ~/.zshrc  # will likely get modified by user from ~/.zshrc later
-  if [[ ! -f ~/.zshenv ]]; then
+  if [[ ! -f ~/.zshrc ]]; then
+    printParagraph "No ~/.zshrc found!"
+    printParagraph "- using the whole of $SCRIPT_PATH/.zshrc as ~/.zshrc"
+    cp $SCRIPT_PATH/.zshrc ~/.zshrc
+  fi
+  if [[ ! -L ~/.zshenv ]]; then
     # some interfaces (e.g. VimR) won't source ~/.zshrc, but it will source ~/.zshenv
     # - see https://stackoverflow.com/questions/11415428/terminal-vim-not-loading-zshrc#comment81558730_34049730
     ln -s ~/.zshrc ~/.zshenv
   fi
+  echo
   printParagraph "Oh My Zsh installation completed!"
   printParagraph "$POST_SHELL_SETUP_MESSAGE"
   unset RUNZSH
@@ -215,6 +234,15 @@ function bootstrap {
     printf "\n  Email address to use for Git: "
     read globalGitUserEmailAddress
     git config --global user.email "$globalGitUserEmailAddress"
+  fi
+
+  if [[ :$CURRENT_PATH: != *:"$HOMEBREW_PATH":* ]]; then
+    # this will likely get modified by user from ~/.zshrc later
+    # but it's to ensure that some bare minimum paths are added
+    echo "
+# Added by bootstrap script to ensure some directories are added to \$PATH.
+# Most likely you will want to modify this when you add your own .zshrc config.
+export PATH=\$PATH:$HOMEBREW_PATH" >> ~/.zshrcalsdjkf
   fi
 
   tput bel

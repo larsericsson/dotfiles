@@ -43,14 +43,3 @@ cnoreabbrev Qall qall
 
 " set proper formatting to JSON file comments
 autocmd FileType json syntax match Comment +\/\/.\+$+
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
