@@ -121,7 +121,7 @@ fi
 export GREP_OPTIONS='-iI --color --exclude-dir=.git'
 
 # configure fuzzy finder to use ripgrep
-export FZF_DEFAULT_COMMAND='rg --files --follow --hidden'
+export FZF_DEFAULT_COMMAND='rg --files --follow --hidden --no-ignore-vcs'
 
 # show current Kubernetes context on right-hand side of shell, if kubectl is installed
 if [[ -x "$(command -v kubectl)" ]]; then
