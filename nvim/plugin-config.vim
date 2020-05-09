@@ -8,10 +8,16 @@ let NERDTreeShowHidden=1
 " Close NERDTree when leaving the tab holding its buffer
 autocmd TabLeave NERD_tree* NERDTreeClose
 
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" gutentags
+" Signify (VCS diff indication)
+" 
 """
-let g:gutentags_ctags_executable='/usr/local/bin/ctags'
+
+let g:signify_sign_add               = '+'
+let g:signify_sign_delete            = '_'
+let g:signify_sign_delete_first_line = '‾'
+let g:signify_sign_change            = '~'
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -60,6 +66,13 @@ endif
 
 " Highlight the symbol and its references when holding the cursor.
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" gutentags
+"""
+
+let g:gutentags_ctags_executable='/usr/local/bin/ctags'
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
