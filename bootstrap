@@ -15,13 +15,20 @@ if [[ :$CURRENT_PATH: != *:"$HOMEBREW_PATH":* ]]; then
 fi
 
 SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
-NEOVIM_CONFIG_PATH=~/.config/nvim
+NEOVIM_CONFIG_PATH="~/.config/nvim"
 
 STYLE_RESET=$(printf '\e[0m')
 STYLE_BOLD=$(printf '\e[1m')
 STYLE_HEADER=$(printf '\e[1;97m')
 STYLE_SUBHEADER=$(printf '\e[1;36m')
 STYLE_PARAGRAPH=$(printf '\e[2m')
+
+ARG_CMD_RECEIVED=""
+ARG_HELP="help"
+ARG_HELP_SHORT="h"
+ARG_NUKE_EXISTING_CONFIG_ZSH="nuke-existing-zsh"
+ARG_NUKE_EXISTING_CONFIG_VIM="nuke-existing-vim"
+ARG_NUKE_EXISTING_CONFIG_ALL="nuke-all-existing"
 
 POST_SHELL_SETUP_MESSAGE="Now go ahead and add what you need from $SCRIPT_PATH/.zshrc to ~/.zshrc (see the \"User configuration\" part specifically)."
 
@@ -54,8 +61,69 @@ function showError {
 }
 
 function showInfo {
-  echo -e "${STYLE_RESET}${STYLE_BOLD}./$(basename $0)${STYLE_RESET}"
+  echo -e "${STYLE_RESET}${STYLE_HEADER}./$(basename $0)${STYLE_RESET}"
   echo "Installs and configures up a local development environment."
+  echo
+  echo "Usage:"
+  echo -e "  ${STYLE_RESET}${STYLE_SUBHEADER}--${ARG_HELP}${STYLE_RESET}|${STYLE_BOLD}-${ARG_HELP_SHORT}${STYLE_RESET}\n    Show this help section"
+  echo -e "  ${STYLE_RESET}${STYLE_SUBHEADER}--${ARG_NUKE_EXISTING_CONFIG_ZSH}${STYLE_RESET}\n    Remove existing Zsh configuration"
+  echo -e "  ${STYLE_RESET}${STYLE_SUBHEADER}--${ARG_NUKE_EXISTING_CONFIG_VIM}${STYLE_RESET}\n    Remove existing Vim configuration"
+  echo -e "  ${STYLE_RESET}${STYLE_SUBHEADER}--${ARG_NUKE_EXISTING_CONFIG_ALL}${STYLE_RESET}\n    Remove all existing configurations"
+}
+
+function nukeExistingZshConfig {
+  printParagraph "~/.oh-my-zsh"
+  [[ -d ~/.oh-my-zsh ]] && rm -rf ~/.oh-my-zsh
+
+  printParagraph "~/.zshrc"
+  [[ -f ~/.zshrc ]] && rm ~/.zshrc*
+
+  if [[ -f ~/.shell.pre-oh-my-zsh ]]; then
+    printParagraph "~/.shell.pre-oh-my-zsh"
+    rm ~/.shell.pre-oh-my-zsh
+  fi
+}
+
+function nukeExistingVimConfig {
+  printParagraph "$NEOVIM_CONFIG_PATH"
+  # [[ -d $NEOVIM_CONFIG_PATH ]] && rm -rf $NEOVIM_CONFIG_PATH
+
+  printParagraph "~/.config/coc"
+  # [[ -d ~/.config/coc ]] && rm -rf ~/.config/coc
+}
+
+function nukeExistingConfig {
+  case $ARG_CMD_RECEIVED in
+    $ARG_NUKE_EXISTING_CONFIG_ZSH)
+      echo "WARNING: About to remove existing Zsh config."
+      read -p "Press Enter to continue"
+      printHeader "Removing existing Zsh config..."
+      nukeExistingZshConfig
+      ;;
+    $ARG_NUKE_EXISTING_CONFIG_VIM)
+      echo "WARNING: About to remove existing Vim config."
+      read -p "Press Enter to continue"
+      printHeader "Removing existing Vim config..."
+      nukeExistingVimConfig
+      ;;
+    $ARG_NUKE_EXISTING_CONFIG_ALL)
+      echo "WARNING: About to remove ALL existing configs."
+      read -p "Press Enter to continue"
+      printHeader "Removing all existing configs..."
+
+      printSubheader "Remove existing Zsh config"
+      nukeExistingZshConfig
+
+      printSubheader "Remove existing Vim config"
+      nukeExistingVimConfig
+      ;;
+    *)
+      showError "Invalid nuke config type $ARG_CMD_RECEIVED"
+      ;;
+  esac
+
+  tput bel
+  printHeader "🗑   All done!"
 }
 
 function bootstrap {
@@ -259,9 +327,32 @@ function main {
   # parse arguments
   while [ $# -gt 0 ]; do
     case $1 in
-      --help) showInfo; exit;;
-      -h) showInfo; exit;;
-      *) showError "Invalid option $1";;
+      "--$ARG_HELP")
+        showInfo
+        exit
+        ;;
+      "-$ARG_HELP_SHORT")
+        showInfo
+        exit
+        ;;
+      "--$ARG_NUKE_EXISTING_CONFIG_ZSH")
+        ARG_CMD_RECEIVED=$ARG_NUKE_EXISTING_CONFIG_ZSH
+        nukeExistingConfig
+        exit
+        ;;
+      "--$ARG_NUKE_EXISTING_CONFIG_VIM")
+        ARG_CMD_RECEIVED=$ARG_NUKE_EXISTING_CONFIG_VIM
+        nukeExistingConfig
+        exit
+        ;;
+      "--$ARG_NUKE_EXISTING_CONFIG_ALL")
+        ARG_CMD_RECEIVED=$ARG_NUKE_EXISTING_CONFIG_ALL
+        nukeExistingConfig
+        exit
+        ;;
+      *)
+        showError "Invalid option $1"
+        ;;
     esac
     shift
   done

@@ -1,4 +1,15 @@
 {
+  "diagnostic.warningSign": "⚠️",
+  "diagnostic.errorSign": "❗️",
+  "diagnostic.hintSign": "💡",
+  "diagnostic.infoSign": "ℹ︎",
+  "diagnostic.enable": true,
+  "prettier.singleQuote": true,
+  "prettier.eslintIntegration": true,
+  "prettier.stylelintIntegration": false,
+  "prettier.disableSuccessMessage": true,
+  "suggest.echodocSupport": true,
+  "suggest.maxCompleteItemCount": 20,
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "coc.preferences.formatOnSaveFiletypes": [
     "javascript",
@@ -6,7 +17,8 @@
     "typescriptreact",
     "json",
     "javascriptreact",
-    "typescript.tsx"
+    "typescript.tsx",
+    "html"
   ],
   "eslint.filetypes": [
     "javascript",
@@ -15,9 +27,4 @@
     "javascriptreact",
     "typescript.tsx"
   ],
-  "suggest.echodocSupport": true,
-  "suggest.maxCompleteItemCount": 20,
-  "diagnostic.errorSign": "•",
-  "diagnostic.warningSign": "•",
-  "diagnostic.infoSign": "•"
 }

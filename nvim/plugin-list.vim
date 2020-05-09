@@ -1,24 +1,24 @@
-let vimplug_exists=expand('~/.config/nvim/autoload/plug.vim')
+let vimplug_exists=expand(g:NEOVIM_CONFIG_DIR . '/autoload/plug.vim')
 
 if !filereadable(vimplug_exists)
-  if !executable("curl")
-    echoerr "You have to install curl or first install vim-plug yourself!"
-    execute "q!"
+  if !executable('curl')
+    echoerr 'You have to install curl or first install vim-plug yourself!'
+    execute 'q!'
   endif
-  echo "Installing Vim-Plug..."
-  echo ""
-  silent exec "!\curl -fLo " . vimplug_exists . " --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
-  let g:not_finish_vimplug = "yes"
+  echo 'Installing Vim-Plug...'
+  echo ''
+  silent exec '!\curl -fLo ' . vimplug_exists . ' --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  let g:not_finish_vimplug = 'yes'
 endif
 
-call plug#begin('~/.config/nvim/plugged')
+call plug#begin(g:NEOVIM_CONFIG_DIR . '/plugged')
 
 " git
 Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
 
-" fuzzy search
-set rtp+=/usr/local/opt/fzf
+" fuzzy finder
+set rtp+=/usr/local/opt/fzf  " add runtime path to installed fzf binary
 Plug 'junegunn/fzf.vim'
 
 " syntax highlighting and indentation
