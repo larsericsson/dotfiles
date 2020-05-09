@@ -15,7 +15,7 @@ if [[ :$CURRENT_PATH: != *:"$HOMEBREW_PATH":* ]]; then
 fi
 
 SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
-NEOVIM_CONFIG_PATH="~/.config/nvim"
+NEOVIM_CONFIG_PATH="$HOME/.config/nvim"
 
 STYLE_RESET=$(printf '\e[0m')
 STYLE_BOLD=$(printf '\e[1m')
@@ -85,11 +85,11 @@ function nukeExistingZshConfig {
 }
 
 function nukeExistingVimConfig {
-  printParagraph "$NEOVIM_CONFIG_PATH"
-  # [[ -d $NEOVIM_CONFIG_PATH ]] && rm -rf $NEOVIM_CONFIG_PATH
+  printParagraph ${NEOVIM_CONFIG_PATH/#$HOME/'~'}
+  [[ -d $NEOVIM_CONFIG_PATH ]] && rm -rf $NEOVIM_CONFIG_PATH
 
   printParagraph "~/.config/coc"
-  # [[ -d ~/.config/coc ]] && rm -rf ~/.config/coc
+  [[ -d ~/.config/coc ]] && rm -rf ~/.config/coc
 }
 
 function nukeExistingConfig {
