@@ -7,7 +7,7 @@
 
 set -e
 
-SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
 NEOVIM_CONFIG_PATH=~/.config/nvim
 
 STYLE_RESET=$(printf '\e[0m')
@@ -49,7 +49,7 @@ function main {
     shift
   done
 
-  echo "About to gather local configuration files and copy them into $SCRIPT_PATH."
+  echo "About to gather local configuration files and copy them into ${SCRIPT_DIR/#$HOME/~}."
   read -p "Press Enter to continue"
   collect
 }
@@ -60,8 +60,8 @@ function collect {
   ################################################
 
   printSubheader "Neovim and its plugins"
-  [[ -d $SCRIPT_PATH/nvim/autoload ]] && rm -rf $SCRIPT_PATH/nvim/autoload
-  [[ -d $SCRIPT_PATH/nvim/plugged ]] && rm -rf $SCRIPT_PATH/nvim/plugged
+  [[ -d $SCRIPT_DIR/nvim/autoload ]] && rm -rf $SCRIPT_DIR/nvim/autoload
+  [[ -d $SCRIPT_DIR/nvim/plugged ]] && rm -rf $SCRIPT_DIR/nvim/plugged
   [[ -d $NEOVIM_CONFIG_PATH ]] && cp -r $NEOVIM_CONFIG_PATH ./
 
   ################################################
@@ -69,20 +69,20 @@ function collect {
   printSubheader "Git"
   if [[ -f ~/.gitconfig ]]; then
     printParagraph "~/.gitconfig"
-    cp ~/.gitconfig $SCRIPT_PATH/.gitconfig_global
+    cp ~/.gitconfig $SCRIPT_DIR/.gitconfig_global
   else
     printParagraph "~/.gitconfig doesn't exist"
   fi
 
   # strip Git config from user specifics
-  cat $SCRIPT_PATH/.gitconfig_global \
+  cat $SCRIPT_DIR/.gitconfig_global \
     | grep -v "email = $(git config --global user.email)" \
     | grep -v "name = $(git config --global user.name)" \
-    > $SCRIPT_PATH/.gitconfig_global
+    > $SCRIPT_DIR/.gitconfig_global
 
   if [[ -f ~/.gitignore ]]; then
     printParagraph "~/.gitignore"
-    cp ~/.gitignore $SCRIPT_PATH/.gitignore_global
+    cp ~/.gitignore $SCRIPT_DIR/.gitignore_global
   else
     printParagraph "~/.gitignore doesn't exist"
   fi
@@ -92,9 +92,18 @@ function collect {
   printSubheader "Zsh dotfiles"
   if [[ -f ~/.zshrc ]]; then
     printParagraph "~/.zshrc"
-    cp ~/.zshrc $SCRIPT_PATH/.zshrc
+    cp ~/.zshrc $SCRIPT_DIR/.zshrc
   else
     printParagraph "~/.zshrc doesn't exist"
+  fi
+
+  printSubheader "Spectacle window manager"
+  spectacleShortcutsConfigPath=~/Library/Application\ Support/Spectacle/Shortcuts.json
+  if [[ -f $spectacleShortcutsConfigPath ]]; then
+    printParagraph "Copying shortcuts config..."
+    cp "$spectacleShortcutsConfigPath" $SCRIPT_DIR/spectacle-shortcuts.json
+  else
+    printParagraph "${spectacleShortcutsConfigPath/#$HOME/~} doesn't exist"
   fi
 
   ################################################

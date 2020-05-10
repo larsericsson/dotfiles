@@ -14,7 +14,7 @@ if [[ :$CURRENT_PATH: != *:"$HOMEBREW_PATH":* ]]; then
   PATH=$CURRENT_PATH:$HOMEBREW_PATH
 fi
 
-SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
+SCRIPT_DIR="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
 CONFIG_DIR="$HOME/.config"
 COLOR_SCHEMES_DIR="$CONFIG_DIR/color-schemes"
 NEOVIM_CONFIG_DIR="$CONFIG_DIR/nvim"
@@ -32,7 +32,7 @@ ARG_NUKE_EXISTING_CONFIG_ZSH="nuke-existing-zsh"
 ARG_NUKE_EXISTING_CONFIG_VIM="nuke-existing-vim"
 ARG_NUKE_EXISTING_CONFIG_ALL="nuke-all-existing"
 
-POST_SHELL_SETUP_MESSAGE="Now go ahead and add what you need from $SCRIPT_PATH/.zshrc to ~/.zshrc (see the \"User configuration\" part specifically)."
+POST_SHELL_SETUP_MESSAGE="Now go ahead and add what you need from ${SCRIPT_DIR/#$HOME/~}/.zshrc to ~/.zshrc (see the \"User configuration\" part specifically)."
 
 function printHeader {
   echo -e "${STYLE_RESET}\n${STYLE_HEADER}$1${STYLE_RESET}"
@@ -167,8 +167,8 @@ function bootstrap {
   fi
   if [[ ! -f ~/.zshrc ]]; then
     printParagraph "No ~/.zshrc found!"
-    printParagraph "- using the whole of $SCRIPT_PATH/.zshrc as ~/.zshrc"
-    cp $SCRIPT_PATH/.zshrc ~/.zshrc
+    printParagraph "- using the whole of $SCRIPT_DIR/.zshrc as ~/.zshrc"
+    cp $SCRIPT_DIR/.zshrc ~/.zshrc
   fi
   if [[ ! -L ~/.zshenv ]]; then
     # some interfaces (e.g. VimR) won't source ~/.zshrc, but it will source ~/.zshenv
@@ -220,7 +220,7 @@ function bootstrap {
 
   printSubheader "Neovim plugin manager and plugins"
   [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
-  cp -r $SCRIPT_PATH/nvim $NEOVIM_CONFIG_DIR/../
+  cp -r $SCRIPT_DIR/nvim $NEOVIM_CONFIG_DIR/../
   [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
   printParagraph "Installing in Neovim..."
   sleep 3
@@ -287,13 +287,13 @@ function bootstrap {
   printSubheader "Global Git configuration"
   if [[ ! -f ~/.gitignore ]]; then
     printParagraph "Adding .gitignore"
-    cp $SCRIPT_PATH/.gitignore_global ~/.gitignore_global
+    cp $SCRIPT_DIR/.gitignore_global ~/.gitignore_global
   else
     printParagraph "~/.gitignore already exists"
   fi
   if [[ ! -f ~/.gitconfig ]]; then
     printParagraph "Adding .gitconfig"
-    cp $SCRIPT_PATH/.gitconfig_global ~/.gitconfig
+    cp $SCRIPT_DIR/.gitconfig_global ~/.gitconfig
   else
     printParagraph "~/.gitconfig already exists"
   fi
@@ -306,6 +306,17 @@ function bootstrap {
     printf "\n  Email address to use for Git: "
     read globalGitUserEmailAddress
     git config --global user.email "$globalGitUserEmailAddress"
+  fi
+
+  printSubheader "Spectacle window manager"
+  spectacleConfigDir=~/Library/Application\ Support/Spectacle
+  spectacleShortcutsConfigPath=$spectacleConfigDir/Shortcuts.json
+  [[ ! -d $spectacleConfigDir ]] && mkdir -p $spectacleConfigDir
+  if [[ ! -f $spectacleShortcutsConfigPath ]]; then
+    printParagraph "Copying shortcuts config..."
+    cp $SCRIPT_DIR/spectacle-shortcuts.json "$spectacleShortcutsConfigPath"
+  else
+    printParagraph "${spectacleShortcutsConfigPath/#$HOME/~} already exists"
   fi
 
   if [[ :$CURRENT_PATH: != *:"$HOMEBREW_PATH":* ]]; then
