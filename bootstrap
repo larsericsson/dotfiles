@@ -15,7 +15,9 @@ if [[ :$CURRENT_PATH: != *:"$HOMEBREW_PATH":* ]]; then
 fi
 
 SCRIPT_PATH="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
-NEOVIM_CONFIG_PATH="$HOME/.config/nvim"
+CONFIG_DIR="$HOME/.config"
+COLOR_SCHEMES_DIR="$CONFIG_DIR/color-schemes"
+NEOVIM_CONFIG_DIR="$CONFIG_DIR/nvim"
 
 STYLE_RESET=$(printf '\e[0m')
 STYLE_BOLD=$(printf '\e[1m')
@@ -42,17 +44,6 @@ function printSubheader {
 
 function printParagraph {
   echo -e "${STYLE_RESET}  ${STYLE_PARAGRAPH}$1${STYLE_RESET}"
-}
-
-function ensureBareMinimumPATH {
-  if [[ :$PATH: != *:"$HOMEBREW_PATH":* ]]; then
-    # this will likely get modified by user from ~/.zshrc later
-    # but it's to ensure that some bare minimum paths are added
-    echo "
-# Added by bootstrap script to ensure some directories are added to \$PATH.
-# Most likely you will want to modify this when you add your own .zshrc config.
-export PATH=\$PATH:$HOMEBREW_PATH" >> ~/.zshrc
-  fi
 }
 
 function showError {
@@ -85,8 +76,8 @@ function nukeExistingZshConfig {
 }
 
 function nukeExistingVimConfig {
-  printParagraph ${NEOVIM_CONFIG_PATH/#$HOME/'~'}
-  [[ -d $NEOVIM_CONFIG_PATH ]] && rm -rf $NEOVIM_CONFIG_PATH
+  printParagraph ${NEOVIM_CONFIG_DIR/#$HOME/'~'}
+  [[ -d $NEOVIM_CONFIG_DIR ]] && rm -rf $NEOVIM_CONFIG_DIR
 
   printParagraph "~/.config/coc"
   [[ -d ~/.config/coc ]] && rm -rf ~/.config/coc
@@ -129,6 +120,8 @@ function nukeExistingConfig {
 function bootstrap {
   printHeader "☕️ Bootstrapping work environment..."
 
+  [[ ! -d $CONFIG_DIR ]] && mkdir -p $CONFIG_DIR
+
   printSubheader "MacOS Command Line Tools"
   logFile="/tmp/cmdline-tools-install.$(date +%s)"
   xcode-select --install &> $logFile || true
@@ -143,6 +136,17 @@ function bootstrap {
   else
     printParagraph "\`brew\` appears to be already installed, at $(which brew)"
   fi
+
+  printSubheader "Color schemes"
+  [[ ! -d $COLOR_SCHEMES_DIR ]] && mkdir -p $COLOR_SCHEMES_DIR
+  colorThemeInstallDir_solarized="$COLOR_SCHEMES_DIR/solarized" 
+  if [[ ! -d $colorThemeInstallDir_solarized ]]; then
+    printParagraph "Installing at $colorThemeInstallDir_solarized"
+    git clone https://github.com/altercation/solarized $colorThemeInstallDir_solarized
+  else
+    printParagraph "${colorThemeInstallDir_solarized/#$HOME/'~'}/solarized already exists"
+  fi
+  printParagraph "Please see the documentation for each interface (iTerm2/Vim etc) on how to change color scheme"
 
   printSubheader "zsh"
   if [[ ! "$(command -v zsh)" ]]; then
@@ -199,7 +203,7 @@ function bootstrap {
   fi
 
   printSubheader "Neovim"
-  [[ ! -d $NEOVIM_CONFIG_PATH ]] && mkdir -p $NEOVIM_CONFIG_PATH
+  [[ ! -d $NEOVIM_CONFIG_DIR ]] && mkdir -p $NEOVIM_CONFIG_DIR
   if [[ ! "$(command -v nvim)" ]]; then
     brew install neovim
   else
@@ -215,9 +219,9 @@ function bootstrap {
   fi
 
   printSubheader "Neovim plugin manager and plugins"
-  [[ -d $NEOVIM_CONFIG_PATH/plugged ]] && rm -rf $NEOVIM_CONFIG_PATH/plugged
-  cp -r $SCRIPT_PATH/nvim $NEOVIM_CONFIG_PATH/../
-  [[ -d $NEOVIM_CONFIG_PATH/plugged ]] && rm -rf $NEOVIM_CONFIG_PATH/plugged
+  [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
+  cp -r $SCRIPT_PATH/nvim $NEOVIM_CONFIG_DIR/../
+  [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
   printParagraph "Installing in Neovim..."
   sleep 3
   $(brew --prefix neovim)/bin/nvim -c 'PlugInstall|qa'
@@ -310,7 +314,7 @@ function bootstrap {
     echo "
 # Added by bootstrap script to ensure some directories are added to \$PATH.
 # Most likely you will want to modify this when you add your own .zshrc config.
-export PATH=\$PATH:$HOMEBREW_PATH" >> ~/.zshrcalsdjkf
+export PATH=\$PATH:$HOMEBREW_PATH" >> ~/.zshrc
   fi
 
   tput bel
