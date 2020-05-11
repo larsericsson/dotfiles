@@ -2,7 +2,7 @@
 
 ##
 # ./bootstrap
-# - Installs and configures up a local development environment on MacOS.
+# - Installs and configures up a local development environment on macOS.
 ##
 
 set -e
@@ -16,14 +16,16 @@ fi
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
 CONFIG_DIR="$HOME/.config"
-COLOR_SCHEMES_DIR="$CONFIG_DIR/color-schemes"
 NEOVIM_CONFIG_DIR="$CONFIG_DIR/nvim"
+COLOR_SCHEMES_DIR="$CONFIG_DIR/color-schemes"
 
 STYLE_RESET=$(printf '\e[0m')
 STYLE_BOLD=$(printf '\e[1m')
 STYLE_HEADER=$(printf '\e[1;97m')
 STYLE_SUBHEADER=$(printf '\e[1;36m')
 STYLE_PARAGRAPH=$(printf '\e[2m')
+STYLE_PARAGRAPH_INDENT="  "
+STYLE_CLEAR_PREVIOUS_LINE="$(printf '\e[1A\e[2K')"
 
 ARG_CMD_RECEIVED=""
 ARG_HELP="help"
@@ -34,20 +36,8 @@ ARG_NUKE_EXISTING_CONFIG_ALL="nuke-all-existing"
 
 POST_SHELL_SETUP_MESSAGE="Now go ahead and add what you need from ${SCRIPT_DIR/#$HOME/~}/.zshrc to ~/.zshrc (see the \"User configuration\" part specifically)."
 
-function printHeader {
-  echo -e "${STYLE_RESET}\n${STYLE_HEADER}$1${STYLE_RESET}"
-}
-
-function printSubheader {
-  echo -e "${STYLE_RESET}\n${STYLE_HEADER}▸${STYLE_RESET} ${STYLE_SUBHEADER}$1${STYLE_RESET}"
-}
-
-function printParagraph {
-  echo -e "${STYLE_RESET}  ${STYLE_PARAGRAPH}$1${STYLE_RESET}"
-}
-
 function showError {
-  echo "$1" 1>&2
+  echo -e "${STYLE_RESET}${STYLE_BOLD}\nERROR: $1${STYLE_RESET}" 1>&2
   exit 1
 }
 
@@ -60,6 +50,72 @@ function showInfo {
   echo -e "  ${STYLE_RESET}${STYLE_SUBHEADER}--${ARG_NUKE_EXISTING_CONFIG_ZSH}${STYLE_RESET}\n    Remove existing Zsh configuration"
   echo -e "  ${STYLE_RESET}${STYLE_SUBHEADER}--${ARG_NUKE_EXISTING_CONFIG_VIM}${STYLE_RESET}\n    Remove existing Vim configuration"
   echo -e "  ${STYLE_RESET}${STYLE_SUBHEADER}--${ARG_NUKE_EXISTING_CONFIG_ALL}${STYLE_RESET}\n    Remove all existing configurations"
+}
+
+function printHeader {
+  echo -e "${STYLE_RESET}\n${STYLE_HEADER}$1${STYLE_RESET}"
+}
+
+function printSubheader {
+  echo -e "${STYLE_RESET}\n${STYLE_HEADER}▸${STYLE_RESET} ${STYLE_SUBHEADER}$1${STYLE_RESET}"
+}
+
+function printParagraph {
+  echo -e "${STYLE_RESET}${STYLE_PARAGRAPH_INDENT}${STYLE_PARAGRAPH}$1${STYLE_RESET}"
+}
+
+function printFormattedParagraph {
+  printf "${STYLE_RESET}${STYLE_PARAGRAPH_INDENT}${STYLE_PARAGRAPH}$1${STYLE_RESET}"
+}
+
+function clearPreviousLine {
+  printf $STYLE_CLEAR_PREVIOUS_LINE
+}
+
+function confirm {
+  prompt="${1:-Are you sure?}"
+  clearLineAfterUserInput=${2:-false}
+
+  tput bel
+
+  # call with a prompt string or use a default
+  read -r -p "$prompt (y/N) " response
+  case "$response" in
+    [yY][eE][sS]|[yY])
+      $clearLineAfterUserInput && clearPreviousLine
+      true
+      ;;
+    *)
+      $clearLineAfterUserInput && clearPreviousLine
+      false
+      ;;
+  esac
+}
+
+function waitForEnterKey {
+  tput bel
+  read -p "Press Enter to continue"
+  clearPreviousLine
+}
+
+function showLoadingIndicatorUntilProcessHasEnded {
+  idOfProcessToWaitFor="$1"
+  spinCharacters='—\|/'
+
+  stty -echo  # disable keyboard input
+
+  i=0
+  while kill -0 $idOfProcessToWaitFor 2> /dev/null
+  do
+    i=$(( (i+1) %4 ))
+    printf "${STYLE_BOLD}${spinCharacters:$i:1}"
+    sleep 0.1
+    printf "\b"
+  done
+
+  stty echo  # re-enable keybard input
+
+  printf "\b"
 }
 
 function nukeExistingZshConfig {
@@ -77,29 +133,32 @@ function nukeExistingZshConfig {
 
 function nukeExistingVimConfig {
   printParagraph ${NEOVIM_CONFIG_DIR/#$HOME/'~'}
-  [[ -d $NEOVIM_CONFIG_DIR ]] && rm -rf $NEOVIM_CONFIG_DIR
+  [[ -d $NEOVIM_CONFIG_DIR ]] && rm -rf $NEOVIM_CONFIG_DIR || true
 
   printParagraph "~/.config/coc"
-  [[ -d ~/.config/coc ]] && rm -rf ~/.config/coc
+  [[ -d ~/.config/coc ]] && rm -rf ~/.config/coc || true
 }
 
 function nukeExistingConfig {
   case $ARG_CMD_RECEIVED in
     $ARG_NUKE_EXISTING_CONFIG_ZSH)
-      echo "WARNING: About to remove existing Zsh config."
-      read -p "Press Enter to continue"
+      echo -e "${STYLE_RESET}${STYLE_BOLD}WARNING: About to remove existing Zsh config.${STYLE_RESET}"
+      waitForEnterKey
+      clearPreviousLine
       printHeader "Removing existing Zsh config..."
       nukeExistingZshConfig
       ;;
     $ARG_NUKE_EXISTING_CONFIG_VIM)
-      echo "WARNING: About to remove existing Vim config."
-      read -p "Press Enter to continue"
+      echo -e "${STYLE_RESET}${STYLE_BOLD}WARNING: About to remove existing Vim config.${STYLE_RESET}"
+      waitForEnterKey
+      clearPreviousLine
       printHeader "Removing existing Vim config..."
       nukeExistingVimConfig
       ;;
     $ARG_NUKE_EXISTING_CONFIG_ALL)
-      echo "WARNING: About to remove ALL existing configs."
-      read -p "Press Enter to continue"
+      echo -e "${STYLE_RESET}${STYLE_BOLD}WARNING: About to remove ALL existing configs.${STYLE_RESET}"
+      waitForEnterKey
+      clearPreviousLine
       printHeader "Removing all existing configs..."
 
       printSubheader "Remove existing Zsh config"
@@ -114,7 +173,45 @@ function nukeExistingConfig {
   esac
 
   tput bel
-  printHeader "🗑   All done!"
+  printHeader "🗑  All done!"
+}
+
+function verifyInstalledGuiApps {
+  printSubheader "GUI applications"
+  echo -e "  ${STYLE_RESET}You might want to install some of the following applications:\n
+  • ${STYLE_RESET}${STYLE_BOLD}1Password${STYLE_RESET} - https://apps.apple.com/se/app/1password-7-password-manager/id1333542190?l=en&mt=12
+  • ${STYLE_RESET}${STYLE_BOLD}Alfred${STYLE_RESET} - https://www.alfredapp.com/
+  • ${STYLE_RESET}${STYLE_BOLD}iTerm${STYLE_RESET} - https://iterm2.com/
+  • ${STYLE_RESET}${STYLE_BOLD}Amphetamine${STYLE_RESET} - https://apps.apple.com/se/app/amphetamine/id937984704?l=en&mt=12
+  • ${STYLE_RESET}${STYLE_BOLD}Spectacle${STYLE_RESET} - https://www.spectacleapp.com/"
+
+  echo
+  waitForEnterKey
+  clearPreviousLine
+}
+
+function setupMacOS {
+  printSubheader "macOS defaults"
+
+  if ! confirm "${STYLE_PARAGRAPH_INDENT}About to configure macOS defaults. Continue?" true; then
+    printParagraph "Leaving defaults as-is"
+    sleep 1
+    return
+  fi
+
+  # if don't have cached sudo credentials, request new
+  if ! sudo -n true 2> /dev/null; then
+    printf "$STYLE_PARAGRAPH_INDENT"
+    sudo -v
+    clearPreviousLine
+  fi
+
+  printFormattedParagraph "Configuring... "
+  source $SCRIPT_DIR/.macos &
+  showLoadingIndicatorUntilProcessHasEnded $!
+  printFormattedParagraph "\bdone!\r\f"
+
+  sleep 1
 }
 
 function bootstrap {
@@ -122,13 +219,16 @@ function bootstrap {
 
   [[ ! -d $CONFIG_DIR ]] && mkdir -p $CONFIG_DIR
 
-  printSubheader "MacOS Command Line Tools"
+  printSubheader "macOS Command Line Tools"
   logFile="/tmp/cmdline-tools-install.$(date +%s)"
   xcode-select --install &> $logFile || true
   if [[ "$(cat $logFile)" == *"already installed"* ]]; then
     printParagraph "Command Line Tools appears to be already installed"
   fi
   rm $logFile
+
+  verifyInstalledGuiApps
+  setupMacOS
 
   printSubheader "Homebrew"
   if [[ ! "$(command -v brew)" ]]; then
@@ -139,13 +239,21 @@ function bootstrap {
 
   printSubheader "Color schemes"
   [[ ! -d $COLOR_SCHEMES_DIR ]] && mkdir -p $COLOR_SCHEMES_DIR
-  colorThemeInstallDir_solarized="$COLOR_SCHEMES_DIR/solarized" 
+  ## "Solarized"
+  colorThemeInstallDir_solarized="$COLOR_SCHEMES_DIR/solarized"
   if [[ ! -d $colorThemeInstallDir_solarized ]]; then
-    printParagraph "Installing at $colorThemeInstallDir_solarized"
+    printParagraph "Adding ${colorThemeInstallDir_solarized/#$HOME/~}"
     git clone https://github.com/altercation/solarized $colorThemeInstallDir_solarized
   else
-    printParagraph "${colorThemeInstallDir_solarized/#$HOME/'~'}/solarized already exists"
+    printParagraph "${colorThemeInstallDir_solarized/#$HOME/~} already exists"
   fi
+  if [[ "$(find /Applications -maxdepth 1 -iname "itermz.app" | wc -l | xargs echo)" != 0 ]]; then
+    printParagraph "Adding ${colorThemeInstallDir_solarized/#$HOME/~}/iterm2-colors-solarized to iTerm"
+    open $colorThemeInstallDir_solarized/iterm2-colors-solarized/*.itermcolors
+  else
+    printParagraph "Not adding color theme to iTerm. iTerm not found in /Applications - is it installed?"
+  fi
+  ##
   printParagraph "Please see the documentation for each interface (iTerm2/Vim etc) on how to change color scheme"
 
   printSubheader "zsh"
@@ -218,12 +326,12 @@ function bootstrap {
     printParagraph "\`font-hack-nerd-font\` appears to be already installed"
   fi
 
-  printSubheader "Neovim plugin manager and plugins"
+  # printSubheader "Neovim plugin manager and plugins"
   [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
   cp -r $SCRIPT_DIR/nvim $NEOVIM_CONFIG_DIR/../
   [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
-  printParagraph "Installing in Neovim..."
-  sleep 3
+  # printParagraph "Installing in Neovim..."
+  sleep 1
   $(brew --prefix neovim)/bin/nvim -c 'PlugInstall|qa'
   $(brew --prefix neovim)/bin/nvim -c 'CocUpdateSync|qa'
 
@@ -235,7 +343,7 @@ function bootstrap {
     printParagraph "\`nvm\` appears to be already installed"
   fi
   export NVM_DIR="$HOME/.nvm"  # should also be in ~/.zshrc
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # should also be in ~/.zshrc
+  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh" || true  # should also be in ~/.zshrc
 
   printSubheader "Node.js"
   if [[ "$(command -v node)" != "" ]]; then
@@ -323,17 +431,17 @@ function bootstrap {
     # this will likely get modified by user from ~/.zshrc later
     # but it's to ensure that some bare minimum paths are added
     echo "
-# Added by bootstrap script to ensure some directories are added to \$PATH.
-# Most likely you will want to modify this when you add your own .zshrc config.
-export PATH=\$PATH:$HOMEBREW_PATH" >> ~/.zshrc
+    # Added by bootstrap script to ensure some directories are added to \$PATH.
+    # Most likely you will want to modify this when you add your own .zshrc config.
+    export PATH=\$PATH:$HOMEBREW_PATH" >> ~/.zshrc
   fi
 
-  tput bel
-  printHeader "🎉  All done!"
-  echo "    $POST_SHELL_SETUP_MESSAGE"
+  printHeader "🎉 All done!"
+  echo "$POST_SHELL_SETUP_MESSAGE"
   echo
-  read -p "Press Enter to activate new environment"
-  echo
+  waitForEnterKey
+  clearPreviousLine
+  echo "${STYLE_PARAGRAPH}Activating environment..."
 
   exec zsh -l
 }
@@ -373,7 +481,9 @@ function main {
   done
 
   echo "About to bootstrap development environment."
-  read -p "Press Enter to continue"
+  waitForEnterKey
+  clearPreviousLine
+
   bootstrap
 }
 
