@@ -35,6 +35,7 @@ ARG_NUKE_EXISTING_CONFIG_VIM="nuke-existing-vim"
 ARG_NUKE_EXISTING_CONFIG_ALL="nuke-all-existing"
 
 POST_SHELL_SETUP_MESSAGE="Now go ahead and add what you need from ${SCRIPT_DIR/#$HOME/~}/.zshrc to ~/.zshrc (see the \"User configuration\" part specifically)."
+POST_MACOS_SETUP_MESSAGE="Note that some macOS changes might require a reboot."
 
 function showError {
   echo -e "${STYLE_RESET}${STYLE_BOLD}\nERROR: $1${STYLE_RESET}" 1>&2
@@ -210,6 +211,7 @@ function setupMacOS {
   source $SCRIPT_DIR/.macos &
   showLoadingIndicatorUntilProcessHasEnded $!
   printFormattedParagraph "\bdone!\r\f"
+  printParagraph "$POST_MACOS_SETUP_MESSAGE"
 
   sleep 1
 }
@@ -326,11 +328,11 @@ function bootstrap {
     printParagraph "\`font-hack-nerd-font\` appears to be already installed"
   fi
 
-  # printSubheader "Neovim plugin manager and plugins"
+  printSubheader "Neovim plugin manager and plugins"
   [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
   cp -r $SCRIPT_DIR/nvim $NEOVIM_CONFIG_DIR/../
   [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
-  # printParagraph "Installing in Neovim..."
+  printParagraph "Installing in Neovim..."
   sleep 1
   $(brew --prefix neovim)/bin/nvim -c 'PlugInstall|qa'
   $(brew --prefix neovim)/bin/nvim -c 'CocUpdateSync|qa'
@@ -437,7 +439,8 @@ function bootstrap {
   fi
 
   printHeader "🎉 All done!"
-  echo "$POST_SHELL_SETUP_MESSAGE"
+  echo $POST_SHELL_SETUP_MESSAGE
+  echo $POST_MACOS_SETUP_MESSAGE
   echo
   waitForEnterKey
   clearPreviousLine
