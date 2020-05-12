@@ -15,6 +15,17 @@ STYLE_BOLD=$(printf '\e[1m')
 STYLE_HEADER=$(printf '\e[1;97m')
 STYLE_SUBHEADER=$(printf '\e[1;36m')
 STYLE_PARAGRAPH=$(printf '\e[2m')
+STYLE_CLEAR_PREVIOUS_LINE="$(printf '\e[1A\e[2K')"
+
+function showError {
+  echo -e "${STYLE_RESET}${STYLE_BOLD}\nERROR: $1${STYLE_RESET}" 1>&2
+  exit 1
+}
+
+function showInfo {
+  echo -e "${STYLE_RESET}${STYLE_BOLD}./$(basename $0)${STYLE_RESET}"
+  echo "Collects local configuration files and prepares them for version control."
+}
 
 function printHeader {
   echo -e "${STYLE_RESET}\n${STYLE_HEADER}$1${STYLE_RESET}"
@@ -28,14 +39,14 @@ function printParagraph {
   echo -e "${STYLE_RESET}  ${STYLE_PARAGRAPH}$1${STYLE_RESET}"
 }
 
-function showError {
-  echo "$1" 1>&2
-  exit 1
+function clearPreviousLine {
+  printf $STYLE_CLEAR_PREVIOUS_LINE
 }
 
-function showInfo {
-  echo -e "${STYLE_RESET}${STYLE_BOLD}./$(basename $0)${STYLE_RESET}"
-  echo "Collects local configuration files and prepares them for version control."
+function waitForEnterKey {
+  tput bel
+  read -p "Press Enter to continue"
+  clearPreviousLine
 }
 
 function main {
@@ -50,7 +61,9 @@ function main {
   done
 
   echo "About to gather local configuration files and copy them into ${SCRIPT_DIR/#$HOME/~}."
-  read -p "Press Enter to continue"
+  waitForEnterKey
+  clearPreviousLine
+
   collect
 }
 
@@ -62,7 +75,7 @@ function collect {
   printSubheader "Neovim and its plugins"
   [[ -d $SCRIPT_DIR/nvim/autoload ]] && rm -rf $SCRIPT_DIR/nvim/autoload
   [[ -d $SCRIPT_DIR/nvim/plugged ]] && rm -rf $SCRIPT_DIR/nvim/plugged
-  [[ -d $NEOVIM_CONFIG_PATH ]] && cp -r $NEOVIM_CONFIG_PATH ./
+  [[ -d $NEOVIM_CONFIG_PATH ]] && cp -r $NEOVIM_CONFIG_PATH $SCRIPT_DIR/
 
   ################################################
 
@@ -109,7 +122,7 @@ function collect {
   ################################################
 
   tput bel
-  printHeader "🎉  All done!"
+  printHeader "🎉 All done!"
 }
 
 main "$@"
