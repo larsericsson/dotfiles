@@ -2,8 +2,11 @@
 " General
 """
 
-" Save current file
+" Save current buffer
 nmap <Leader>w :w<CR>
+
+" Quit current buffer
+nmap <Leader>q :q<CR>
 
 " Abbreviations, for sanity
 cnoreabbrev W! w!
