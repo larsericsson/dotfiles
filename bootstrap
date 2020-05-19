@@ -249,7 +249,7 @@ function bootstrap {
   else
     printParagraph "${colorThemeInstallDir_solarized/#$HOME/~} already exists"
   fi
-  if [[ "$(find /Applications -maxdepth 1 -iname "itermz.app" | wc -l | xargs echo)" != 0 ]]; then
+  if [[ "$(find /Applications -maxdepth 1 -iname "iterm.app" | wc -l | xargs echo)" != 0 ]]; then
     printParagraph "Adding ${colorThemeInstallDir_solarized/#$HOME/~}/iterm2-colors-solarized to iTerm"
     open $colorThemeInstallDir_solarized/iterm2-colors-solarized/*.itermcolors
   else
