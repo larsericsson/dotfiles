@@ -219,6 +219,10 @@ function setupMacOS {
 function bootstrap {
   printHeader "☕️ Bootstrapping work environment..."
 
+  echo "About to bootstrap development environment."
+  waitForEnterKey
+  clearPreviousLine
+
   [[ ! -d $CONFIG_DIR ]] && mkdir -p $CONFIG_DIR
 
   printSubheader "macOS Command Line Tools"
@@ -387,6 +391,13 @@ function bootstrap {
     printParagraph "\`vimr\` appears to be already installed, at $(which vimr)"
   fi
 
+  printSubheader "htop"
+  if [[ ! "$(command -v htop)" ]]; then
+    brew install htop
+  else
+    printParagraph "\`htop\` appears to be already installed, at $(which htop)"
+  fi
+
   printSubheader "GitHub CLI"
   if [[ ! "$(brew ls --versions hub)" ]]; then
     brew install hub
@@ -471,10 +482,6 @@ function main {
     esac
     shift
   done
-
-  echo "About to bootstrap development environment."
-  waitForEnterKey
-  clearPreviousLine
 
   bootstrap
 }
