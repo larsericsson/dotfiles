@@ -8,6 +8,15 @@ nmap <Leader>w :w<CR>
 " Quit current buffer
 nmap <Leader>q :q<CR>
 
+" Edit file (or re-read current file)
+nmap <Leader>e :edit<space>
+
+" Open new empty tab
+nmap <Leader>tn :tabnew<CR>
+
+" Open file in a new tab
+nmap <Leader>te :tabedit<space>
+
 " Abbreviations, for sanity
 cnoreabbrev W! w!
 cnoreabbrev Q! q!

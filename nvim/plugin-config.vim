@@ -83,6 +83,14 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" auto-pairs
+"""
+
+" Reduce the types to pair, for sanity
+let g:AutoPairs = {'(':')', '[':']', '{':'}', '''''''': '''''''', '"""': '"""'}
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " vim-closetag
 """
 
