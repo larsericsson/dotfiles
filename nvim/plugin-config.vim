@@ -83,6 +83,16 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim-closetag
+"""
+
+let g:closetag_filenames = '*.html,*.xhtml,*.phtml,*.jsx,*.tsx'
+let g:closetag_filetypes = 'html,xhtml,phtml,jsx,tsx'
+let g:closetag_xhtml_filenames = '*.xhtml,*.jsx,*.tsx'
+let g:closetag_xhtml_filetypes = 'xhtml,jsx,tsx'
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " gutentags
 """
 
