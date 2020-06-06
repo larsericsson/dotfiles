@@ -2,7 +2,7 @@
 export PATH=$HOME/bin:/usr/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/local/sbin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/erik/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load --- if set to "random", it will
 # load a random theme each time oh-my-zsh is loaded, in which case,
@@ -132,3 +132,9 @@ if [[ -x "$(command -v kubectl)" ]]; then
 
   RPROMPT='%{%B%F{blue}%}☸️  $(print_kube_context)%{%f%k%b%K{black}%B%F{green}%}'
 fi
+
+# add paths to Google Cloud SDK
+if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
+
+# add zsh command completion for Google Cloud CLI
+if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
