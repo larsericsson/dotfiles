@@ -79,6 +79,9 @@ function! s:showDocumentation()
   endif
 endfunction
 
+" Add `:Prettier` command to format files
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
 " remap keys for gotos
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
