@@ -38,6 +38,20 @@ let g:coc_global_extensions = [
   \ 'coc-snippets'
   \ ]
 
+function EnableOrDisableEslintForBuffer()
+  let localEslintDir = fnamemodify('.', ':p:h') . '/node_modules/eslint'
+
+  if isdirectory(localEslintDir)
+    " call coc#config('eslint.enable', v:true)
+  else
+    " call coc#config('eslint.enable', v:false)
+  endif
+endfunction
+
+# Get rid of those "[coc.nvim] Failed to load the ESLint library ..." warnings
+autocmd BufNewFile,BufReadPre,BufEnter,BufLeave
+  \ * call EnableOrDisableEslintForBuffer()
+
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).

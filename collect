@@ -60,15 +60,15 @@ function main {
     shift
   done
 
-  echo "About to gather local configuration files and copy them into ${SCRIPT_DIR/#$HOME/~}."
-  waitForEnterKey
-  clearPreviousLine
-
   collect
 }
 
 function collect {
   printHeader "☕️ Collecting local configurations..."
+
+  echo "About to gather local configuration files and copy them into ${SCRIPT_DIR/#$HOME/~}."
+  waitForEnterKey
+  clearPreviousLine
 
   ################################################
 

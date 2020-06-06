@@ -22,9 +22,9 @@
   ],
   "eslint.filetypes": [
     "javascript",
+    "javascriptreact",
     "typescript",
     "typescriptreact",
-    "javascriptreact",
     "typescript.tsx"
   ]
 }
