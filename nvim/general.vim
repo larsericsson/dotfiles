@@ -37,3 +37,8 @@ set splitright
 
 " set proper formatting to JSON file comments
 autocmd FileType json syntax match Comment +\/\/.\+$+
+
+" improve syntax highlighting for some file types
+" - see https://thoughtbot.com/blog/modern-typescript-and-react-development-in-vim#highlighting-for-large-files
+autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
