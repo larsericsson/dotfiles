@@ -393,6 +393,19 @@ function bootstrap {
     printParagraph "\`htop\` appears to be already installed, at $(which htop)"
   fi
 
+  printSubheader "ripgrep"
+  if [[ ! "$(command -v rg)" ]]; then
+    brew install ripgrep
+  else
+    printParagraph "\`rg\` appears to be already installed, at $(which rg)"
+  fi
+  if [[ ! -f ~/.rgignore ]]; then
+    printParagraph "Adding ~/.rgignore"
+    cp $SCRIPT_DIR/.rgignore_global ~/.rgignore
+  else
+    printParagraph "~/.rgignore already exists"
+  fi
+
   printSubheader "GitHub CLI"
   if [[ ! "$(brew ls --versions hub)" ]]; then
     brew install hub
@@ -400,15 +413,22 @@ function bootstrap {
     printParagraph "\`hub\` appears to be already installed, at $(which hub)"
   fi
 
+  printSubheader "GitX"
+  if [[ ! "$(command -v gitx)" ]]; then
+    brew cask install rowanj-gitx
+  else
+    printParagraph "\`gitx\` appears to be already installed, at $(which gitx)"
+  fi
+
   printSubheader "Global Git configuration"
   if [[ ! -f ~/.gitignore ]]; then
-    printParagraph "Adding .gitignore"
-    cp $SCRIPT_DIR/.gitignore_global ~/.gitignore_global
+    printParagraph "Adding ~/.gitignore"
+    cp $SCRIPT_DIR/.gitignore_global ~/.gitignore
   else
     printParagraph "~/.gitignore already exists"
   fi
   if [[ ! -f ~/.gitconfig ]]; then
-    printParagraph "Adding .gitconfig"
+    printParagraph "Adding ~/.gitconfig"
     cp $SCRIPT_DIR/.gitconfig_global ~/.gitconfig
   else
     printParagraph "~/.gitconfig already exists"

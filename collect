@@ -86,12 +86,13 @@ function collect {
   else
     printParagraph "~/.gitconfig doesn't exist"
   fi
-
-  # strip Git config from user specifics
-  cat $SCRIPT_DIR/.gitconfig_global \
-    | grep -v "email = $(git config --global user.email)" \
-    | grep -v "name = $(git config --global user.name)" \
-    > $SCRIPT_DIR/.gitconfig_global
+  if [[ -f $SCRIPT_DIR/.gitconfig_global ]]; then
+    # strip Git config from user specifics
+    cat $SCRIPT_DIR/.gitconfig_global \
+      | grep -v "email = $(git config --global user.email)" \
+      | grep -v "name = $(git config --global user.name)" \
+      > $SCRIPT_DIR/.gitconfig_global
+  fi
 
   if [[ -f ~/.gitignore ]]; then
     printParagraph "~/.gitignore"
@@ -110,13 +111,12 @@ function collect {
     printParagraph "~/.zshrc doesn't exist"
   fi
 
-  printSubheader "Spectacle window manager"
-  spectacleShortcutsConfigPath=~/Library/Application\ Support/Spectacle/Shortcuts.json
-  if [[ -f $spectacleShortcutsConfigPath ]]; then
-    printParagraph "Copying shortcuts config..."
-    cp "$spectacleShortcutsConfigPath" $SCRIPT_DIR/spectacle-shortcuts.json
+  printSubheader "ripgrep"
+  if [[ -f ~/.rgignore ]]; then
+    printParagraph "~/.rgignore"
+    cp ~/.rgignore $SCRIPT_DIR/.rgignore_global
   else
-    printParagraph "${spectacleShortcutsConfigPath/#$HOME/~} doesn't exist"
+    printParagraph "~/.rgignore doesn't exist"
   fi
 
   ################################################
