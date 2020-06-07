@@ -18,7 +18,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'mhinz/vim-signify'
 
 " fuzzy finder
-set rtp+=/usr/local/opt/fzf  " add runtime path to installed fzf binary
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 " syntax highlighting and indentation
