@@ -284,11 +284,6 @@ function bootstrap {
     printParagraph "- using the whole of $SCRIPT_DIR/.zshrc as ~/.zshrc"
     cp $SCRIPT_DIR/.zshrc ~/.zshrc
   fi
-  if [[ ! -L ~/.zshenv ]]; then
-    # some interfaces (e.g. VimR) won't source ~/.zshrc, but it will source ~/.zshenv
-    # - see https://stackoverflow.com/questions/11415428/terminal-vim-not-loading-zshrc#comment81558730_34049730
-    ln -s ~/.zshrc ~/.zshenv
-  fi
   echo
   printParagraph "Oh My Zsh installation completed!"
   printParagraph "$POST_SHELL_SETUP_MESSAGE"
