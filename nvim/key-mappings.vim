@@ -8,6 +8,9 @@ nmap <Leader>w :w<CR>
 " Quit current buffer
 nmap <Leader>q :q<CR>
 
+" Save and quit current buffer
+nmap <Leader>x :x<CR>
+
 " Edit file (or re-read current file)
 nmap <Leader>e :edit<space>
 
@@ -16,6 +19,9 @@ nmap <Leader>tn :tabnew<CR>
 
 " Open file in a new tab
 nmap <Leader>te :tabedit<space>
+
+" Remove search highlighting
+nmap <Leader>/ :noh<CR>
 
 " Abbreviations, for sanity
 cnoreabbrev W! w!
@@ -35,7 +41,7 @@ nmap <Leader>l :set list!<CR>
 "   1. Source the primary Vim config file
 "   2. Install plugins
 "   3. Update COC (code intellisense) extensions to the latest version
-nnoremap <Leader>r :so $MYVIMRC<CR>:PlugInstall<CR>:q<CR>:CocUpdateSync<CR>:sleep 1000m<CR>:echo "Vim config reloaded"<CR>
+nnoremap <Leader>r :so $MYVIMRC<CR>:PlugInstall<CR>:q<CR>:PlugClean<CR>:q<CR>:CocUpdateSync<CR>:so $MYVIMRC<CR><C-o>:sleep 1000m<CR>:echo "Vim config reloaded"<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -57,8 +63,10 @@ nmap <Leader>f :NERDTreeFind<CR>
 nnoremap <C-p> :Files<CR>
 
 " Use Esc to kill the fzf buffer (https://github.com/junegunn/fzf.vim/issues/544)
-au TermOpen * tnoremap <buffer> <Esc> <c-\><c-n>
-au FileType fzf tunmap <buffer> <Esc>
+" - Disabling this for now since it's clearly not working (getting
+"   occasional errors causing fzf to sort-of crash)
+"au * tnoremap <buffer> <Esc> <c-\><c-n>
+"au FileType fzf tunmap <buffer> <Esc>
 
 " Open fzf's buffer view
 nnoremap <Leader>b :Buffers<CR>
