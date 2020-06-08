@@ -186,3 +186,11 @@ nmap <Leader>cc :CocDisable<CR>:CocEnable<CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" nerdcommenter
+"""
+
+" Toggle comment(s)
+nmap <leader>c <Plug>NERDCommenterToggle
+xmap <leader>c <Plug>NERDCommenterToggle
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
