@@ -30,6 +30,7 @@ if exists('g:plug_home') && isdirectory(g:plug_home . '/coc.nvim')
   let g:coc_global_extensions = [
     \ 'coc-tsserver',
     \ 'coc-eslint',
+    \ 'coc-tslint',
     \ 'coc-json',
     \ 'coc-css',
     \ 'coc-html',
@@ -39,19 +40,26 @@ if exists('g:plug_home') && isdirectory(g:plug_home . '/coc.nvim')
     \ 'coc-snippets'
     \ ]
 
-  function EnableOrDisableEslintForBuffer()
+  function EnableOrDisableLinterForBuffer()
+    let localTslintDir = fnamemodify('.', ':p:h') . '/node_modules/tslint'
     let localEslintDir = fnamemodify('.', ':p:h') . '/node_modules/eslint'
 
     if isdirectory(localEslintDir)
       call coc#config('eslint.enable', v:true)
     else
       call coc#config('eslint.enable', v:false)
+
+      if isdirectory(localTslintDir)
+        call coc#config('tslint.enable', v:true)
+      else
+        call coc#config('tslint.enable', v:false)
+      endif
     endif
   endfunction
 
   " Get rid of those "[coc.nvim] Failed to load the ESLint library ..." warnings
   autocmd BufNewFile,BufReadPre,BufEnter,BufLeave
-    \ * call EnableOrDisableEslintForBuffer()
+    \ * call EnableOrDisableLinterForBuffer()
 
   augroup mygroup
     autocmd!
