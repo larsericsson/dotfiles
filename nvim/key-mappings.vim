@@ -23,6 +23,9 @@ nmap <Leader>te :tabedit<space>
 " Remove search highlighting
 nmap <Leader>/ :noh<CR>
 
+" Re-select previous selection
+nmap <Leader>v gv
+
 " Abbreviations, for sanity
 cnoreabbrev W! w!
 cnoreabbrev Q! q!
