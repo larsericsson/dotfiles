@@ -48,6 +48,17 @@ nnoremap <Leader>r :so $MYVIMRC<CR>:PlugInstall<CR>:q<CR>:PlugClean<CR>:q<CR>:Co
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" nerdcommenter
+"""
+
+" Toggle comment(s)
+" - These mappings need to come before any other mappings
+"   beginning with the same combo
+nmap <leader>c <Plug>NERDCommenterToggle
+xmap <leader>c <Plug>NERDCommenterToggle
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " NERDTree
 """
 
@@ -184,13 +195,5 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " effectively getting rid of some of its lingering floating windows
 nmap <Leader>cc :CocDisable<CR>:CocEnable<CR>
 
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" nerdcommenter
-"""
-
-" Toggle comment(s)
-nmap <leader>c <Plug>NERDCommenterToggle
-xmap <leader>c <Plug>NERDCommenterToggle
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
