@@ -27,16 +27,16 @@ nmap <Leader>/ :noh<CR>
 nmap <Leader>v gv
 
 " Abbreviations, for sanity
-cnoreabbrev W! w!
-cnoreabbrev Q! q!
-cnoreabbrev Qall! qall!
 cnoreabbrev Wq wq
 cnoreabbrev Wa wa
 cnoreabbrev wQ wq
 cnoreabbrev WQ wq
 cnoreabbrev W w
 cnoreabbrev Q q
-cnoreabbrev Qall qall
+cnoreabbrev Qa qa
+cnoreabbrev W! w!
+cnoreabbrev Q! q!
+cnoreabbrev Qa! qa!
 
 " Show/hide hidden characters
 nmap <Leader>l :set list!<CR>
