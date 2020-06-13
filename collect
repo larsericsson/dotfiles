@@ -9,7 +9,6 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
 NEOVIM_CONFIG_PATH=~/.config/nvim
-NEOVIM_SNIPPETS_CONFIG_PATH=~/config/nvim/UltiSnips
 
 STYLE_RESET=$(printf '\e[0m')
 STYLE_BOLD=$(printf '\e[1m')
@@ -76,7 +75,6 @@ function collect {
   printSubheader "Neovim and its plugins"
   [[ -d $SCRIPT_DIR/nvim/autoload ]] && rm -rf $SCRIPT_DIR/nvim/autoload
   [[ -d $SCRIPT_DIR/nvim/plugged ]] && rm -rf $SCRIPT_DIR/nvim/plugged
-  [[ -d $SCRIPT_DIR/nvim/UltiSnips ]] && rm -rf $SCRIPT_DIR/nvim/UltiSnips
   [[ -d $NEOVIM_CONFIG_PATH ]] && cp -r $NEOVIM_CONFIG_PATH $SCRIPT_DIR/
 
   ################################################

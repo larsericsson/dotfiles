@@ -27,5 +27,20 @@
     "typescript",
     "typescriptreact",
     "typescript.tsx"
-  ]
+  ],
+  "snippets.userSnippetsDirectory": "~/.config/nvim/ultisnips",
+  "snippets.ultisnips.directories": [
+    "~/.config/nvim/plugged/vim-javascript-snippets/snippets/javascript"
+  ],
+  "snippets.extends": {
+    "javascriptreact": [
+      "javascript"
+    ],
+    "typescript": [
+      "javascript"
+    ],
+    "typescriptreact": [
+      "javascript"
+    ]
+  }
 }

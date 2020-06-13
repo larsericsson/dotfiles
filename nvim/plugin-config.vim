@@ -37,7 +37,8 @@ if exists('g:plug_home') && isdirectory(g:plug_home . '/coc.nvim')
     \ 'coc-python',
     \ 'coc-prettier',
     \ 'coc-svg',
-    \ 'coc-snippets'
+    \ 'coc-snippets',
+    \ 'coc-ultisnips',
     \ ]
 
   function EnableOrDisableLinterForBuffer()

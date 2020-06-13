@@ -31,7 +31,6 @@ Plug 'preservim/nerdtree'
 
 " autocompletion, linting
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'SirVer/ultisnips'
 
 " markdown viewer
 Plug 'chemzqm/macdown.vim'
@@ -50,4 +49,5 @@ Plug 'luochen1990/rainbow'
 "Plug 'ludovicchabant/vim-gutentags'
 Plug 'psliwka/vim-smoothie'
 Plug 'ryanoasis/vim-devicons'
+Plug 'grvcoelho/vim-javascript-snippets'
 call plug#end()
