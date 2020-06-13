@@ -31,7 +31,7 @@ Plug 'preservim/nerdtree'
 
 " autocompletion, linting
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'SirVer/ultisnips'
+Plug 'SirVer/ultisnips'
 
 " markdown viewer
 Plug 'chemzqm/macdown.vim'
