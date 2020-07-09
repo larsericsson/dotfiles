@@ -407,10 +407,10 @@ function bootstrap {
   fi
 
   printSubheader "GitHub CLI"
-  if [[ ! "$(brew ls --versions hub)" ]]; then
-    brew install hub
+  if [[ ! "$(brew ls --versions gh)" ]]; then
+    brew install gh
   else
-    printParagraph "\`hub\` appears to be already installed, at $(which hub)"
+    printParagraph "\`gh\` appears to be already installed, at $(which gh)"
   fi
 
   printSubheader "GitX"
