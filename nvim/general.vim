@@ -7,6 +7,7 @@ set colorcolumn=80
 set relativenumber  " generally, use relative line numbers
 set number  " for current row, use absolute line number
 set timeoutlen=300
+set updatetime=300
 set ignorecase
 set title
 set titlestring=%F

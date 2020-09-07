@@ -82,13 +82,37 @@ if exists('g:plug_home') && isdirectory(g:plug_home . '/coc.nvim')
   " Highlight the symbol and its references when holding the cursor.
   autocmd CursorHold * silent call CocActionAsync('highlight')
 
-  " Add (Neo)Vim's native statusline support.
-  " NOTE: Please see `:h coc-status` for integrations with external plugins that
-  " provide custom statusline: lightline.vim, vim-airline.
-  set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+  " Set the current function symbol when holding the cursor.
+  autocmd CursorHold * silent call CocAction('getCurrentFunctionSymbol')
 else
   echom 'WARNING: Can''t use coc.nvim as part of statusline that plugin doesn''t appear to be installed'
 endif
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" lightline.vim
+"""
+
+function! CocCurrentFunction()
+  return get(b:, 'coc_current_function', '')
+endfunction
+
+let g:lightline = {
+  \ 'colorscheme': 'powerline',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \     [ 'coc_status', 'readonly', 'filename', 'modified', 'coc_current_function'  ] ]
+  \ },
+  \ 'component_function': {
+  \   'coc_status': 'coc#status',
+  \   'coc_current_function': 'CocCurrentFunction'
+  \ },
+  \ }
+
+set noshowmode  " lightline already shows current mode
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

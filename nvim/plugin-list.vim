@@ -26,7 +26,7 @@ Plug 'sheerun/vim-polyglot'
 
 " appearance and themes
 Plug 'altercation/vim-colors-solarized'
-Plug 'vim-airline/vim-airline'
+Plug 'itchyny/lightline.vim'
 Plug 'preservim/nerdtree'
 
 " autocompletion, linting
