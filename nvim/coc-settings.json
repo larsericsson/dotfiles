@@ -43,5 +43,5 @@
   ],
   "snippets.userSnippetsDirectory": "~/.config/nvim/ultisnips",
   "suggest.echodocSupport": true,
-  "suggest.maxCompleteItemCount": 20
+  "suggest.maxCompleteItemCount": 40
 }
