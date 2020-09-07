@@ -26,6 +26,8 @@
   "prettier.onlyUseLocalVersion": true,
   "prettier.requireConfig": true,
   "prettier.stylelintIntegration": false,
+  "python.pythonPath": "python",
+  "python.jediEnabled": false,
   "snippets.extends": {
     "javascriptreact": [
       "javascript"
