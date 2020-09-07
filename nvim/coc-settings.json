@@ -1,16 +1,4 @@
 {
-  "diagnostic.warningSign": "⚠️",
-  "diagnostic.errorSign": "❗️",
-  "diagnostic.hintSign": "💡",
-  "diagnostic.infoSign": "ℹ︎",
-  "diagnostic.enable": true,
-  "prettier.eslintIntegration": false,
-  "prettier.stylelintIntegration": false,
-  "prettier.disableSuccessMessage": true,
-  "prettier.requireConfig": true,
-  "prettier.onlyUseLocalVersion": true,
-  "suggest.echodocSupport": true,
-  "suggest.maxCompleteItemCount": 20,
   "coc.preferences.currentFunctionSymbolAutoUpdate": true,
   "coc.preferences.formatOnSaveFiletypes": [
     "javascript",
@@ -21,6 +9,11 @@
     "typescript.tsx",
     "html"
   ],
+  "diagnostic.enable": true,
+  "diagnostic.errorSign": "❗️",
+  "diagnostic.hintSign": "💡",
+  "diagnostic.infoSign": "ℹ︎",
+  "diagnostic.warningSign": "⚠️",
   "eslint.filetypes": [
     "javascript",
     "javascriptreact",
@@ -28,10 +21,11 @@
     "typescriptreact",
     "typescript.tsx"
   ],
-  "snippets.userSnippetsDirectory": "~/.config/nvim/ultisnips",
-  "snippets.ultisnips.directories": [
-    "~/.config/nvim/plugged/vim-javascript-snippets/snippets/javascript"
-  ],
+  "prettier.disableSuccessMessage": true,
+  "prettier.eslintIntegration": false,
+  "prettier.onlyUseLocalVersion": true,
+  "prettier.requireConfig": true,
+  "prettier.stylelintIntegration": false,
   "snippets.extends": {
     "javascriptreact": [
       "javascript"
@@ -42,5 +36,11 @@
     "typescriptreact": [
       "javascript"
     ]
-  }
+  },
+  "snippets.ultisnips.directories": [
+    "~/.config/nvim/plugged/vim-javascript-snippets/snippets/javascript"
+  ],
+  "snippets.userSnippetsDirectory": "~/.config/nvim/ultisnips",
+  "suggest.echodocSupport": true,
+  "suggest.maxCompleteItemCount": 20
 }
