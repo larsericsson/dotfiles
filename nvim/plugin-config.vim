@@ -83,7 +83,7 @@ if exists('g:plug_home') && isdirectory(g:plug_home . '/coc.nvim')
   autocmd CursorHold * silent call CocActionAsync('highlight')
 
   " Set the current function symbol when holding the cursor.
-  autocmd CursorHold * silent call CocAction('getCurrentFunctionSymbol')
+  autocmd CursorHold * silent call CocActionAsync('getCurrentFunctionSymbol')
 else
   echom 'WARNING: Can''t use coc.nvim as part of statusline that plugin doesn''t appear to be installed'
 endif
