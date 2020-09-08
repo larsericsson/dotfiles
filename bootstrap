@@ -311,31 +311,6 @@ function bootstrap {
     printParagraph "\`rg\` appears to be already installed, at $(which rg)"
   fi
 
-  printSubheader "Neovim"
-  [[ ! -d $NEOVIM_CONFIG_DIR ]] && mkdir -p $NEOVIM_CONFIG_DIR
-  if [[ ! "$(command -v nvim)" ]]; then
-    brew install neovim
-  else
-    printParagraph "\`nvim\` appears to be already installed, at $(which nvim)"
-  fi
-
-  printSubheader "Fonts for custom characters"
-  if [[ ! "$(brew cask ls --versions font-hack-nerd-font)" ]]; then
-    brew tap homebrew/cask-fonts
-    brew cask install font-hack-nerd-font
-  else
-    printParagraph "\`font-hack-nerd-font\` appears to be already installed"
-  fi
-
-  printSubheader "Neovim plugin manager and plugins"
-  [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
-  cp -r $SCRIPT_DIR/nvim $NEOVIM_CONFIG_DIR/../
-  [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
-  printParagraph "Installing in Neovim..."
-  sleep 1
-  $(brew --prefix neovim)/bin/nvim -c 'PlugInstall|qa'
-  $(brew --prefix neovim)/bin/nvim -c 'CocUpdateSync|qa'
-
   echo
   printSubheader "Node Version Manager"
   if [[ ! -d "$HOME/.nvm" ]]; then
@@ -378,6 +353,45 @@ function bootstrap {
   else
     printParagraph "\`pipenv\` appears to be already installed, at $(which pipenv)"
   fi
+
+  printSubheader "Neovim"
+  [[ ! -d $NEOVIM_CONFIG_DIR ]] && mkdir -p $NEOVIM_CONFIG_DIR
+  if [[ ! "$(command -v nvim)" ]]; then
+    brew install neovim
+  else
+    printParagraph "\`nvim\` appears to be already installed, at $(which nvim)"
+  fi
+
+  printSubheader "Neovim Python3 provider"
+  if ! $(python3 -c "import neovim" 2> /dev/null); then
+    pip install neovim
+  else
+    printParagraph "\`neovim\` Python 3 package appears to be already installed"
+  fi
+
+  printSubheader "Neovim Node.js provider"
+  if ! $(node -e "require('neovim')" 2> /dev/null); then
+    npm i -g install neovim
+  else
+    printParagraph "\`neovim\` Node.js package appears to be already installed"
+  fi
+
+  printSubheader "Fonts for custom characters"
+  if [[ ! "$(brew cask ls --versions font-hack-nerd-font)" ]]; then
+    brew tap homebrew/cask-fonts
+    brew cask install font-hack-nerd-font
+  else
+    printParagraph "\`font-hack-nerd-font\` appears to be already installed"
+  fi
+
+  printSubheader "Neovim plugin manager and plugins"
+  [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
+  cp -r $SCRIPT_DIR/nvim $NEOVIM_CONFIG_DIR/../
+  [[ -d $NEOVIM_CONFIG_DIR/plugged ]] && rm -rf $NEOVIM_CONFIG_DIR/plugged
+  printParagraph "Installing in Neovim..."
+  sleep 1
+  $(brew --prefix neovim)/bin/nvim -c 'PlugInstall|qa'
+  $(brew --prefix neovim)/bin/nvim -c 'CocUpdateSync|qa'
 
   printSubheader "VimR"
   if [[ ! "$(command -v vimr)" ]]; then
