@@ -386,7 +386,7 @@ function bootstrap {
   fi
 
   printSubheader "Fonts for custom characters"
-  if [[ ! "$(brew cask ls --versions font-hack-nerd-font)" ]]; then
+  if [[ ! "$(brew ls --cask --versions font-hack-nerd-font)" ]]; then
     brew tap homebrew/cask-fonts
     brew cask install font-hack-nerd-font
   else
