@@ -289,6 +289,15 @@ function bootstrap {
   printParagraph "$POST_SHELL_SETUP_MESSAGE"
   unset RUNZSH
 
+  printSubheader "Spaceship Zsh prompt"
+  spaceshipPromptPath=$HOME/.oh-my-zsh/custom/themes/spaceship-prompt
+  if [[ ! -d $spaceshipPromptPath ]]; then
+    git clone https://github.com/denysdovhan/spaceship-prompt.git $spaceshipPromptPath --depth=1
+    ln -s "$spaceshipPromptPath/spaceship.zsh-theme" "$spaceshipPromptPath/../spaceship.zsh-theme" 
+  else
+    printParagraph "Spaceship Zsh prompt already appears to be installed at $spaceshipPromptPath"
+  fi
+
   printSubheader "fzf"
   if [[ ! "$(command -v fzf)" ]]; then
     brew install fzf
