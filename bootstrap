@@ -298,11 +298,31 @@ function bootstrap {
     printParagraph "Spaceship Zsh prompt already appears to be installed at $spaceshipPromptPath"
   fi
 
+  printSubheader "htop"
+  if [[ ! "$(command -v htop)" ]]; then
+    brew install htop
+  else
+    printParagraph "\`htop\` appears to be already installed, at $(which htop)"
+  fi
+
   printSubheader "fzf"
   if [[ ! "$(command -v fzf)" ]]; then
     brew install fzf
   else
     printParagraph "\`fzf\` appears to be installed, at $(which fzf)"
+  fi
+
+  printSubheader "ripgrep"
+  if [[ ! "$(command -v rg)" ]]; then
+    brew install ripgrep
+  else
+    printParagraph "\`rg\` appears to be already installed, at $(which rg)"
+  fi
+  if [[ ! -f ~/.rgignore ]]; then
+    printParagraph "Adding ~/.rgignore"
+    cp $SCRIPT_DIR/.rgignore_global ~/.rgignore
+  else
+    printParagraph "~/.rgignore already exists"
   fi
 
   printSubheader "ctags"
@@ -311,13 +331,6 @@ function bootstrap {
     brew install ctags
   else
     printParagraph "\`ctags\` appears to be already installed, at $(brew --prefix ctags)"
-  fi
-
-  printSubheader "ripgrep"
-  if [[ ! "$(command -v rg)" ]]; then
-    brew install ripgrep
-  else
-    printParagraph "\`rg\` appears to be already installed, at $(which rg)"
   fi
 
   echo
@@ -407,26 +420,6 @@ function bootstrap {
     brew cask install vimr
   else
     printParagraph "\`vimr\` appears to be already installed, at $(which vimr)"
-  fi
-
-  printSubheader "htop"
-  if [[ ! "$(command -v htop)" ]]; then
-    brew install htop
-  else
-    printParagraph "\`htop\` appears to be already installed, at $(which htop)"
-  fi
-
-  printSubheader "ripgrep"
-  if [[ ! "$(command -v rg)" ]]; then
-    brew install ripgrep
-  else
-    printParagraph "\`rg\` appears to be already installed, at $(which rg)"
-  fi
-  if [[ ! -f ~/.rgignore ]]; then
-    printParagraph "Adding ~/.rgignore"
-    cp $SCRIPT_DIR/.rgignore_global ~/.rgignore
-  else
-    printParagraph "~/.rgignore already exists"
   fi
 
   printSubheader "GitHub CLI"
