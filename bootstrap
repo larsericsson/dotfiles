@@ -381,7 +381,7 @@ function bootstrap {
 
   printSubheader "VimR"
   if [[ ! "$(command -v vimr)" ]]; then
-    brew install vimr
+    brew cask install vimr
   else
     printParagraph "\`vimr\` appears to be already installed, at $(which vimr)"
   fi
