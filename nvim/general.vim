@@ -10,7 +10,7 @@ set timeoutlen=300
 set updatetime=300
 set ignorecase
 set title
-set titlestring=%F
+set titlestring=Vim\ –\ %F
 set nowrap
 
 " prefer spaces over tabs, four spaces per indentation

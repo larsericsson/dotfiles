@@ -6,7 +6,7 @@
     "typescriptreact",
     "javascriptreact",
     "typescript.tsx",
-    "html"
+    "vue"
   ],
   "diagnostic.enable": true,
   "diagnostic.errorSign": "❗️",
