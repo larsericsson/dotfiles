@@ -8,6 +8,9 @@ let NERDTreeShowHidden=1
 " Close NERDTree when leaving the tab holding its buffer
 autocmd TabLeave NERD_tree* NERDTreeClose
 
+" Refresh NERDTree when Vim gains focus
+autocmd FocusGained * NERDTreeRefreshRoot
+
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Signify (VCS diff indication)
