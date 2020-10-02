@@ -23,7 +23,7 @@
   "prettier.disableSuccessMessage": true,
   "prettier.eslintIntegration": false,
   "prettier.onlyUseLocalVersion": true,
-  "prettier.requireConfig": true,
+  "prettier.requireConfig": false,
   "prettier.stylelintIntegration": false,
   "python.pythonPath": "python",
   "python.jediEnabled": false,
