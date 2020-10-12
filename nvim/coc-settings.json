@@ -6,7 +6,10 @@
     "typescriptreact",
     "javascriptreact",
     "typescript.tsx",
-    "vue"
+    "vue",
+    "css",
+    "scss",
+    "html"
   ],
   "diagnostic.enable": true,
   "diagnostic.errorSign": "❗️",
@@ -18,7 +21,8 @@
     "javascriptreact",
     "typescript",
     "typescriptreact",
-    "typescript.tsx"
+    "typescript.tsx",
+    "vue"
   ],
   "prettier.disableSuccessMessage": true,
   "prettier.eslintIntegration": false,
