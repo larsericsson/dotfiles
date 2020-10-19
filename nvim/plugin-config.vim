@@ -45,12 +45,30 @@ if exists('g:plug_home') && isdirectory(g:plug_home . '/coc.nvim')
     \ 'coc-vetur',
     \ ]
 
+  function HasLocalEslintConfigFile()
+    let currentDir = fnamemodify('.', ':p:h')
+    let localEslintConfigFilePaths = glob(currentDir . '/.eslintrc*', 0, 1)
+    let readableLocalEslintConfigFilePaths = filter(localEslintConfigFilePaths, 'filereadable(v:val)')
+    let numberOfReadableLocalEslintConfigFilePaths = len(readableLocalEslintConfigFilePaths)
+
+    if numberOfReadableLocalEslintConfigFilePaths == 0
+      return v:false
+    else
+      return v:true
+    endif
+  endfunction
+
   function EnableOrDisableLinterForBuffer()
     let localTslintDir = fnamemodify('.', ':p:h') . '/node_modules/tslint'
     let localEslintDir = fnamemodify('.', ':p:h') . '/node_modules/eslint'
 
     if isdirectory(localEslintDir)
-      call coc#config('eslint.enable', v:true)
+      if HasLocalEslintConfigFile()
+        call coc#config('eslint.enable', v:true)
+      else
+        " No local .eslintrc* file(s) found - disabling coc-eslint
+        call coc#config('eslint.enable', v:false)
+      endif
     else
       call coc#config('eslint.enable', v:false)
 
