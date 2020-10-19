@@ -175,3 +175,17 @@ if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/
 
 # add zsh command completion for Google Cloud CLI
 if [ -f "$HOME/google-cloud-sdk/completion.zsh.inc" ]; then . "$HOME/google-cloud-sdk/completion.zsh.inc"; fi
+
+function cloud_build_status() {
+  local SHA=$1
+  if [ -z $SHA ]; then
+    SHA=$(git rev-parse HEAD)
+  fi
+
+  local GCP_PROJECT_ID=$(gcloud config list --format="value(core.project)")
+
+  echo -e "Getting Cloud Build status for $(printf '\e[1m')$SHA$(printf '\e[0m') in $(printf '\e[1m')$GCP_PROJECT_ID$(printf '\e[0m')…"
+
+  gcloud builds list --project $GCP_PROJECT_ID --filter="substitutions.COMMIT_SHA=$SHA" --format="table[box, title='$(printf '\e[1m')Build Status $GCP_PROJECT_ID$(printf '\e[0m')'](substitutions.SHORT_SHA, status, logUrl)"
+}
+alias cbs="cloud_build_status"
