@@ -8,6 +8,7 @@
   out = log --decorate=full --color --graph origin/master..HEAD
   g = grep -ni
   find = grep -ni
+  showfiles = show --name-only
 [core]
   excludesfile = ~/.gitignore
   quotepath = false
