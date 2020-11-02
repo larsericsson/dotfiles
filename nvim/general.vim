@@ -43,3 +43,8 @@ autocmd FileType json syntax match Comment +\/\/.\+$+
 " - see https://thoughtbot.com/blog/modern-typescript-and-react-development-in-vim#highlighting-for-large-files
 autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
 autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+
+" when Vim gains focus or when a buffer is entered:
+" 1. reload all buffers (or ask to reload)
+" 2. center scroll position to current line
+autocmd FocusGained,BufEnter * :checktime | :normal! zz
