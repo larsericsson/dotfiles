@@ -23,34 +23,34 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 sudo nvram SystemAudioVolume=" "
 
 # Set sidebar icon size to medium
-sudo defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
+defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
 
 # Save to disk (not to iCloud) by default
-sudo defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
 # Reveal IP address, hostname, OS version, etc. when clicking the clock in the login window
 sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo HostName
 
 # Disable automatic capitalization
-sudo defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticCapitalizationEnabled -bool false
 
 # Disable smart dashes
-sudo defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
 
 # Disable automatic period substitution
-sudo defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticPeriodSubstitutionEnabled -bool false
 
 # Disable smart quotes
-sudo defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 
 # Disable auto-correct
-sudo defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 # Disable Siri
-sudo defaults write com.apple.assistant.support "Assistant Enabled" -boolean false
+defaults write com.apple.assistant.support "Assistant Enabled" -boolean false
 
 # Hide Siri icon from menu bar
-sudo defaults write com.apple.Siri StatusMenuVisible -bool false
+defaults write com.apple.Siri StatusMenuVisible -bool false
 
 
 ################################################################################
@@ -58,42 +58,44 @@ sudo defaults write com.apple.Siri StatusMenuVisible -bool false
 ###
 
 # Trackpad: enable tap to click for this user and for the login screen
-sudo defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
-sudo defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
-sudo defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
 # Increase sound quality for Bluetooth headphones/headsets
-sudo defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
+defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
 
 # Enable full keyboard access for all controls (e.g. enable Tab in modal dialogs)
-sudo defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
+defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 # Use scroll gesture with the Ctrl (^) modifier key to zoom
-sudo defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
+# - NOTE: Disabled for now since it's not working on macOS 11.0.1
+# defaults write com.apple.universalaccess closeViewScrollWheelToggle -bool true
 
 # Don't smooth content when zooming in
-sudo defaults write com.apple.universalaccess closeViewSmoothImages -bool false
+# - NOTE: Disabled for now since it's not working on macOS 11.0.1
+# defaults write com.apple.universalaccess closeViewSmoothImages -bool false
 
 # Disable press-and-hold for keys in favor of key repeat
-sudo defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
+defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
 
 # Set language and text formats
-sudo defaults write NSGlobalDomain AppleLanguages -array "en-SE" "sv-SE"
-sudo defaults write NSGlobalDomain AppleLocale -string "en_SE"
-sudo defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
-sudo defaults write NSGlobalDomain AppleMetricUnits -bool true
+defaults write NSGlobalDomain AppleLanguages -array "en-SE" "sv-SE"
+defaults write NSGlobalDomain AppleLocale -string "en_SE"
+defaults write NSGlobalDomain AppleMeasurementUnits -string "Centimeters"
+defaults write NSGlobalDomain AppleMetricUnits -bool true
 
 # Show language menu in the top right corner of the boot screen
 sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool true
 
 # Disable UI sound effects
-sudo defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -int 0
+defaults write NSGlobalDomain com.apple.sound.uiaudio.enabled -int 0
 
 # Disable audio feedback when changing volume
-sudo defaults write NSGlobalDomain com.apple.sound.beep.feedback -integer 0
+defaults write NSGlobalDomain com.apple.sound.beep.feedback -integer 0
 
 # Set sound effects alert volume to zero
-sudo defaults write NSGlobalDomain com.apple.sound.beep.volume -float 0
+defaults write NSGlobalDomain com.apple.sound.beep.volume -float 0
 
 
 ################################################################################
@@ -109,8 +111,8 @@ sudo systemsetup -setrestartfreeze on
 ###
 
 # Require password immediately after sleep or screen saver begins
-sudo defaults write com.apple.screensaver askForPassword -int 1
-sudo defaults write com.apple.screensaver askForPasswordDelay -int 0
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 
 ################################################################################
@@ -119,39 +121,39 @@ sudo defaults write com.apple.screensaver askForPasswordDelay -int 0
 
 # Set user's home directory as the default location for new Finder windows
 # For other paths, use PfHm and file:///full/path/here/
-sudo defaults write com.apple.finder NewWindowTarget -string "PfHm"
-sudo defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
+defaults write com.apple.finder NewWindowTarget -string "PfHm"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
 
 # Show icons for hard drives, mounted servers, and removable media on the desktop
-sudo defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
-sudo defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
-sudo defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
-sudo defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
+defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
 # Show hidden files
-sudo defaults write com.apple.finder AppleShowAllFiles -bool true
+defaults write com.apple.finder AppleShowAllFiles -bool true
 
 # Show all filename extensions
-sudo defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
 # Show status bar in Finder windows
-sudo defaults write com.apple.finder ShowStatusBar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
 
 # Show path bar in Finder windows
-sudo defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowPathbar -bool true
 
 # Display full POSIX path as Finder window title
-# sudo defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+# defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
 
 # Keep folders on top when sorting by name in Finder windows
-sudo defaults write com.apple.finder _FXSortFoldersFirst -bool true
+defaults write com.apple.finder _FXSortFoldersFirst -bool true
 
 # When performing a search in a Finder window, search the current folder by default
-sudo defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
 
 # Avoid creating .DS_Store files on network or USB volumes
-sudo defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-sudo defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 
 # Show item info to the right of the icons on the desktop
 /usr/libexec/PlistBuddy -c "Set DesktopViewSettings:IconViewSettings:labelOnBottom false" ~/Library/Preferences/com.apple.finder.plist
@@ -185,10 +187,10 @@ sudo defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
 # - icnv (icon view)
 # - clmv (column view)
 # - glyv (gallery view)
-sudo defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
+defaults write com.apple.finder FXPreferredViewStyle -string "Nlsv"
 
 # Enable AirDrop over Ethernet and on unsupported Macs running Lion
-sudo defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
+defaults write com.apple.NetworkBrowser BrowseAllInterfaces -bool true
 
 # Show the ~/Library folder
 chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library 2> /dev/null || true
@@ -197,7 +199,7 @@ chflags nohidden ~/Library && xattr -d com.apple.FinderInfo ~/Library 2> /dev/nu
 sudo chflags nohidden /Volumes
 
 # Expand the File Info panes "General" and "Open with"
-sudo defaults write com.apple.finder FXInfoPanesExpanded -dict \
+defaults write com.apple.finder FXInfoPanesExpanded -dict \
     General -bool true \
     OpenWith -bool true
 
@@ -207,22 +209,22 @@ sudo defaults write com.apple.finder FXInfoPanesExpanded -dict \
 ###
 
 # Set the icon size of Dock items to 32 pixels
-sudo defaults write com.apple.dock tilesize -int 32
+defaults write com.apple.dock tilesize -int 32
 
 # Change minimize/maximize window effect: prefer scaling over the "genie-in-a-bottle" effect
-sudo defaults write com.apple.dock mineffect -string "scale"
+defaults write com.apple.dock mineffect -string "scale"
 
 # Show indicator lights for open applications in the Dock
-sudo defaults write com.apple.dock show-process-indicators -bool true
+defaults write com.apple.dock show-process-indicators -bool true
 
 # Remove the auto-hiding Dock delay
-sudo defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-delay -float 0
 
 # Remove the animation when hiding/showing the Dock
-sudo defaults write com.apple.dock autohide-time-modifier -float 0
+defaults write com.apple.dock autohide-time-modifier -float 0
 
 # Show hidden applications in Dock
-sudo defaults write com.apple.dock showhidden -bool true
+defaults write com.apple.dock showhidden -bool true
 
 # Hot corners
 # Possible values:
@@ -239,12 +241,12 @@ sudo defaults write com.apple.dock showhidden -bool true
 # - 13: Lock Screen
 #
 # Top right screen corner → Mission Control
-sudo defaults write com.apple.dock wvous-tr-corner -int 2
-sudo defaults write com.apple.dock wvous-tr-modifier -int 0
+defaults write com.apple.dock wvous-tr-corner -int 2
+defaults write com.apple.dock wvous-tr-modifier -int 0
 #
 # Bottom left screen corner → Start screen saver
-sudo defaults write com.apple.dock wvous-bl-corner -int 5
-sudo defaults write com.apple.dock wvous-bl-modifier -int 0
+defaults write com.apple.dock wvous-bl-corner -int 5
+defaults write com.apple.dock wvous-bl-modifier -int 0
 
 
 ################################################################################
@@ -252,72 +254,72 @@ sudo defaults write com.apple.dock wvous-bl-modifier -int 0
 ###
 
 # Privacy: don’t send search queries to Apple
-sudo defaults write com.apple.Safari UniversalSearchEnabled -bool false
-sudo defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+defaults write com.apple.Safari UniversalSearchEnabled -bool false
+defaults write com.apple.Safari SuppressSearchSuggestions -bool true
 
 # Press Tab to highlight each item on a web page
-sudo defaults write com.apple.Safari WebKitTabToLinksPreferenceKey -bool true
-sudo defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks -bool true
+defaults write com.apple.Safari WebKitTabToLinksPreferenceKey -bool true
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2TabsToLinks -bool true
 
 # Set Safari’s home page to about:blank for faster loading
-sudo defaults write com.apple.Safari HomePage -string "about:blank"
+defaults write com.apple.Safari HomePage -string "about:blank"
 
 # Prevent Safari from opening "safe" files automatically after downloading
-sudo defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
 
 # Hide Safari’s bookmarks bar by default
-sudo defaults write com.apple.Safari ShowFavoritesBar -bool false
+defaults write com.apple.Safari ShowFavoritesBar -bool false
 
 # Hide Safari’s sidebar in Top Sites
-sudo defaults write com.apple.Safari ShowSidebarInTopSites -bool false
+defaults write com.apple.Safari ShowSidebarInTopSites -bool false
 
 # Disable Safari’s thumbnail cache for History and Top Sites
-sudo defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
+defaults write com.apple.Safari DebugSnapshotsUpdatePolicy -int 2
 
 # Enable Safari’s debug menu
-sudo defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
 
 # Enable the Develop menu and the Web Inspector in Safari
-sudo defaults write com.apple.Safari IncludeDevelopMenu -bool true
-sudo defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-sudo defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
 
 # Add a context menu item for showing the Web Inspector in web views
-sudo defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
 
 # Enable continuous spellchecking
-sudo defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
+defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
 
 # Enable continuous spellchecking
-sudo defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
+defaults write com.apple.Safari WebContinuousSpellCheckingEnabled -bool true
 
 # Disable auto-correct
-sudo defaults write com.apple.Safari WebAutomaticSpellingCorrectionEnabled -bool false
+defaults write com.apple.Safari WebAutomaticSpellingCorrectionEnabled -bool false
 
 # Disable AutoFill
-sudo defaults write com.apple.Safari AutoFillFromAddressBook -bool false
-sudo defaults write com.apple.Safari AutoFillPasswords -bool false
-sudo defaults write com.apple.Safari AutoFillCreditCardData -bool false
-sudo defaults write com.apple.Safari AutoFillMiscellaneousForms -bool false
+defaults write com.apple.Safari AutoFillFromAddressBook -bool false
+defaults write com.apple.Safari AutoFillPasswords -bool false
+defaults write com.apple.Safari AutoFillCreditCardData -bool false
+defaults write com.apple.Safari AutoFillMiscellaneousForms -bool false
 
 # Warn about fraudulent websites
-sudo defaults write com.apple.Safari WarnAboutFraudulentWebsites -bool true
+defaults write com.apple.Safari WarnAboutFraudulentWebsites -bool true
 
 # Disable plug-ins
-sudo defaults write com.apple.Safari WebKitPluginsEnabled -bool false
-sudo defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled -bool false
+defaults write com.apple.Safari WebKitPluginsEnabled -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2PluginsEnabled -bool false
 
 # Disable Java
-sudo defaults write com.apple.Safari WebKitJavaEnabled -bool false
-sudo defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled -bool false
-sudo defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabledForLocalFiles -bool false
+defaults write com.apple.Safari WebKitJavaEnabled -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabled -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaEnabledForLocalFiles -bool false
 
 # Block pop-up windows
-sudo defaults write com.apple.Safari WebKitJavaScriptCanOpenWindowsAutomatically -bool false
-sudo defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically -bool false
+defaults write com.apple.Safari WebKitJavaScriptCanOpenWindowsAutomatically -bool false
+defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2JavaScriptCanOpenWindowsAutomatically -bool false
 
 # Enable "Do Not Track"
-sudo defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 
 
 ################################################################################
@@ -325,7 +327,7 @@ sudo defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 ###
 
 # Only use UTF-8 in Terminal.app
-sudo defaults write com.apple.terminal StringEncodings -array 4
+defaults write com.apple.terminal StringEncodings -array 4
 
 
 ################################################################################
@@ -333,10 +335,10 @@ sudo defaults write com.apple.terminal StringEncodings -array 4
 ###
 
 # Show the main window when launching Activity Monitor
-sudo defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
+defaults write com.apple.ActivityMonitor OpenMainWindow -bool true
 
 # Visualize CPU usage in the Activity Monitor Dock icon
-sudo defaults write com.apple.ActivityMonitor IconType -int 5
+defaults write com.apple.ActivityMonitor IconType -int 5
 
 ################################################################################
 
