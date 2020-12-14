@@ -5,7 +5,7 @@
   unstage = reset
   b = branch
   co = checkout
-  out = log --decorate=full --color --graph origin/master..HEAD
+  out = log --decorate=full --color --graph origin/main..HEAD
   g = grep -ni
   find = grep -ni
   showfiles = show --name-only
