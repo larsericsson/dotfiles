@@ -47,4 +47,11 @@ autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
 " when Vim gains focus or when a buffer is entered:
 " 1. reload all buffers (or ask to reload)
 " 2. center scroll position to current line
-autocmd FocusGained,BufEnter * :checktime | :normal! zz
+function s:onFocus()
+  :checktime
+
+  if &buftype != "terminal" && &buftype != "nofile"
+    :normal! zz
+  endif
+endfunction
+autocmd FocusGained,BufEnter * call s:onFocus()
