@@ -401,7 +401,7 @@ function bootstrap {
   printSubheader "Fonts for custom characters"
   if [[ ! "$(brew ls --cask --versions font-hack-nerd-font)" ]]; then
     brew tap homebrew/cask-fonts
-    brew cask install font-hack-nerd-font
+    brew install --cask font-hack-nerd-font
   else
     printParagraph "\`font-hack-nerd-font\` appears to be already installed"
   fi
@@ -417,7 +417,7 @@ function bootstrap {
 
   printSubheader "VimR"
   if [[ ! "$(command -v vimr)" ]]; then
-    brew cask install vimr
+    brew install --cask vimr
   else
     printParagraph "\`vimr\` appears to be already installed, at $(which vimr)"
   fi
@@ -431,7 +431,7 @@ function bootstrap {
 
   printSubheader "GitX"
   if [[ ! "$(command -v gitx)" ]]; then
-    brew cask install rowanj-gitx
+    brew install --cask rowanj-gitx
   else
     printParagraph "\`gitx\` appears to be already installed, at $(which gitx)"
   fi
