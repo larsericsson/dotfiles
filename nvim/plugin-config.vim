@@ -2,7 +2,7 @@
 " NERDTree
 """
 
-let NERDTreeIgnore=['\.DS_Store', '\.netrwhist']
+let NERDTreeIgnore=['\.DS_Store', '\.netrwhist', '\.nvimlog']
 let NERDTreeShowHidden=1
 
 " Close NERDTree when leaving the tab holding its buffer
