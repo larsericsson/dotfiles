@@ -386,7 +386,7 @@ function bootstrap {
 
   printSubheader "Neovim Python3 provider"
   if ! $(python3 -c "import neovim" 2> /dev/null); then
-    pip install neovim
+    pip3 install neovim
   else
     printParagraph "\`neovim\` Python 3 package appears to be already installed"
   fi
