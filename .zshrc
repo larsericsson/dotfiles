@@ -160,6 +160,9 @@ export GREP_OPTIONS='-iI --color --exclude-dir=.git'
 # configure fuzzy finder to use ripgrep
 export FZF_DEFAULT_COMMAND='rg --files --follow --hidden --no-ignore-vcs'
 
+# path to NeoVim log file
+export NVIM_LOG_FILE=~/.cache/nvim/log
+
 # show current Kubernetes context on right-hand side of shell, if kubectl is installed
 if [[ -x "$(command -v kubectl)" ]]; then
   # get current Kubernetes context

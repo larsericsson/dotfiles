@@ -26,6 +26,9 @@ nmap <Leader>/ :noh<CR>
 " Re-select previous selection
 nmap <Leader>v gv
 
+" Open Terminal in horizontal split
+nmap <Leader>ter :split<CR>:terminal<CR>i
+
 " Abbreviations, for sanity
 cnoreabbrev Wq wq
 cnoreabbrev Wa wa
