@@ -29,6 +29,9 @@ nmap <Leader>v gv
 " Open Terminal in horizontal split
 nmap <Leader>ter :split<CR>:terminal<CR>i
 
+" Re-open last closed tab
+nmap <C-S-t> :tabnew#<CR>
+
 " Abbreviations, for sanity
 cnoreabbrev Wq wq
 cnoreabbrev Wa wa
