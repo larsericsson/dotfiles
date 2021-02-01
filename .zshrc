@@ -164,14 +164,14 @@ export FZF_DEFAULT_COMMAND='rg --files --follow --hidden --no-ignore-vcs'
 export NVIM_LOG_FILE=~/.cache/nvim/log
 
 # show current Kubernetes context on right-hand side of shell, if kubectl is installed
-if [[ -x "$(command -v kubectl)" ]]; then
-  # get current Kubernetes context
-  function print_kube_context() {
-    echo ${$(kubectl config current-context 2> /dev/null):-"(unknown)"}
-  }
+#if [[ -x "$(command -v kubectl)" ]]; then
+  ## get current Kubernetes context
+  #function print_kube_context() {
+    #echo ${$(kubectl config current-context 2> /dev/null):-"(unknown)"}
+  #}
 
-  RPROMPT='%{%B%F{blue}%}☸️  $(print_kube_context)%{%f%k%b%K{black}%B%F{green}%}'
-fi
+  #RPROMPT='%{%B%F{blue}%}☸️  $(print_kube_context)%{%f%k%b%K{black}%B%F{green}%}'
+#fi
 
 # add paths to Google Cloud SDK
 if [ -f "$HOME/google-cloud-sdk/path.zsh.inc" ]; then . "$HOME/google-cloud-sdk/path.zsh.inc"; fi
