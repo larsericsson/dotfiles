@@ -210,9 +210,8 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-" Disable and re-enable CoC,
-" effectively getting rid of some of its lingering floating windows
-nmap <Leader>cx :CocDisable<CR>:CocEnable<CR>
+" Restart CoC, effectively getting rid of some of its lingering floating windows
+nmap <Leader>cx :CocRestart<CR><CR>
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
