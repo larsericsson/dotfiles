@@ -144,6 +144,8 @@ alias "n."="nvim ."
 alias "nvim."="nvim ."
 alias gs="git s"
 alias gds="gd --staged"
+alias ll="ls -lhng"
+alias l="ls -lahng"
 
 # initialize nvm, if installed
 export NVM_DIR="$HOME/.nvm"
