@@ -336,7 +336,7 @@ function bootstrap {
   echo
   printSubheader "Node Version Manager"
   if [[ ! -d "$HOME/.nvm" ]]; then
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
   else
     printParagraph "\`nvm\` appears to be already installed"
   fi
