@@ -50,4 +50,5 @@ Plug 'luochen1990/rainbow'
 Plug 'psliwka/vim-smoothie'
 Plug 'ryanoasis/vim-devicons'
 Plug 'grvcoelho/vim-javascript-snippets'
+Plug 'iamcco/coc-tailwindcss',  {'do': 'npm install && npm run build'}
 call plug#end()
